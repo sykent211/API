@@ -1,25 +1,3 @@
-// ============================================
-// FILE: package.json
-// ============================================
-{
-  "name": "key-system",
-  "version": "1.0.0",
-  "description": "Key validation system for Lua scripts",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "engines": {
-    "node": ">=14.0.0"
-  }
-}
-
-// ============================================
-// FILE: server.js
-// ============================================
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
