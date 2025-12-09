@@ -108,12 +108,68 @@ app.post('/validate', (req, res) => {
     });
 });
 
-// Test endpoint (GET) - for browser testing
+// GET endpoint for executors that block POST
 app.get('/validate', (req, res) => {
-    res.json({ 
-        info: "This endpoint requires POST request",
-        usage: "Send POST request with JSON body: { key, hwid, username }",
-        test_keys: ["scriptkey", "premium_key_123", "testkey456"]
+    const { key, hwid, username } = req.query;
+    
+    console.log(`🔍 GET Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
+    
+    if (!key) {
+        return res.json({ 
+            success: false, 
+            message: "❌ No key provided" 
+        });
+    }
+    
+    const keyData = validKeys[key];
+    
+    if (!keyData) {
+        console.log(`❌ Invalid key: ${key}`);
+        return res.json({ 
+            success: false, 
+            message: "❌ Invalid key" 
+        });
+    }
+    
+    if (!keyData.active) {
+        console.log(`❌ Disabled key: ${key}`);
+        return res.json({ 
+            success: false, 
+            message: "❌ Key has been disabled" 
+        });
+    }
+    
+    if (keyData.hwid) {
+        if (keyData.hwid !== hwid) {
+            console.log(`❌ HWID mismatch for key: ${key}`);
+            return res.json({ 
+                success: false, 
+                message: "❌ Key is bound to another device" 
+            });
+        }
+    } else if (hwid) {
+        keyData.hwid = hwid;
+        console.log(`🔗 Key ${key} bound to HWID: ${hwid}`);
+    }
+    
+    if (keyData.expires) {
+        const expireDate = new Date(keyData.expires);
+        if (new Date() > expireDate) {
+            console.log(`❌ Expired key: ${key}`);
+            return res.json({ 
+                success: false, 
+                message: "❌ Key has expired" 
+            });
+        }
+    }
+    
+    console.log(`✅ Key validated successfully: ${key} for ${username || 'Unknown'}`);
+    
+    return res.json({ 
+        success: true, 
+        message: "✅ Key validated successfully",
+        expires: keyData.expires || "Never",
+        owner: keyData.owner
     });
 });
 
