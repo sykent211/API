@@ -4,6 +4,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// CORS headers for Roblox
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 // Valid keys database
 const validKeys = {
     "scriptkey": { 
@@ -26,7 +37,7 @@ const validKeys = {
     }
 };
 
-// Key validation endpoint
+// Key validation endpoint (POST)
 app.post('/validate', (req, res) => {
     const { key, hwid, username } = req.body;
     
@@ -97,11 +108,25 @@ app.post('/validate', (req, res) => {
     });
 });
 
+// Test endpoint (GET) - for browser testing
+app.get('/validate', (req, res) => {
+    res.json({ 
+        info: "This endpoint requires POST request",
+        usage: "Send POST request with JSON body: { key, hwid, username }",
+        test_keys: ["scriptkey", "premium_key_123", "testkey456"]
+    });
+});
+
 // Health check endpoint
 app.get('/', (req, res) => {
     res.json({ 
         status: "✅ Key system online",
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        endpoints: {
+            validate: "/validate (POST)",
+            keys: "/keys (GET)",
+            health: "/ (GET)"
+        }
     });
 });
 
@@ -115,7 +140,10 @@ app.get('/keys', (req, res) => {
         owner: data.owner
     }));
     
-    res.json({ keys: keyList });
+    res.json({ 
+        total: keyList.length,
+        keys: keyList 
+    });
 });
 
 // Start server
