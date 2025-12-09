@@ -31,7 +31,7 @@ const validKeys = {
     },
     "testkey456": { 
         active: true, 
-        hwid: null,
+        hwid: "ABC123XYZ", 
         expires: null,
         owner: "BoundUser"
     }
@@ -41,7 +41,7 @@ const validKeys = {
 app.post('/validate', (req, res) => {
     const { key, hwid, username } = req.body;
     
-    console.log(`🔍 POST Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
+    console.log(`🔍 Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
     
     if (!key) {
         return res.json({ 
@@ -114,10 +114,11 @@ app.get('/validate', (req, res) => {
     
     console.log(`🔍 GET Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
     
-    if (!key) {
+    if (!key || key === "" || key === "null" || key === "undefined") {
+        console.log(`❌ No key provided`);
         return res.json({ 
             success: false, 
-            message: "❌ No key provided" 
+            message: "❌ NOT Whitelisted - No key provided" 
         });
     }
     
@@ -179,7 +180,7 @@ app.get('/', (req, res) => {
         status: "✅ Key system online",
         timestamp: new Date().toISOString(),
         endpoints: {
-            validate: "/validate (GET/POST)",
+            validate: "/validate (POST)",
             keys: "/keys (GET)",
             health: "/ (GET)"
         }
@@ -189,7 +190,7 @@ app.get('/', (req, res) => {
 // Get all keys (admin only - remove in production or add auth)
 app.get('/keys', (req, res) => {
     const keyList = Object.entries(validKeys).map(([key, data]) => ({
-        key: key.substring(0, 4) + "***",
+        key: key.substring(0, 4) + "***", // Partially hide keys
         active: data.active,
         hwid: data.hwid ? "Bound" : "Unbound",
         expires: data.expires || "Never",
