@@ -31,7 +31,7 @@ const validKeys = {
     },
     "testkey456": { 
         active: true, 
-        hwid: "ABC123XYZ", 
+        hwid: null,
         expires: null,
         owner: "BoundUser"
     }
@@ -41,7 +41,7 @@ const validKeys = {
 app.post('/validate', (req, res) => {
     const { key, hwid, username } = req.body;
     
-    console.log(`🔍 Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
+    console.log(`🔍 POST Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
     
     if (!key) {
         return res.json({ 
@@ -179,7 +179,7 @@ app.get('/', (req, res) => {
         status: "✅ Key system online",
         timestamp: new Date().toISOString(),
         endpoints: {
-            validate: "/validate (POST)",
+            validate: "/validate (GET/POST)",
             keys: "/keys (GET)",
             health: "/ (GET)"
         }
@@ -189,7 +189,7 @@ app.get('/', (req, res) => {
 // Get all keys (admin only - remove in production or add auth)
 app.get('/keys', (req, res) => {
     const keyList = Object.entries(validKeys).map(([key, data]) => ({
-        key: key.substring(0, 4) + "***", // Partially hide keys
+        key: key.substring(0, 4) + "***",
         active: data.active,
         hwid: data.hwid ? "Bound" : "Unbound",
         expires: data.expires || "Never",
