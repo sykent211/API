@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Control Panel</title>
+    <title>Quco Control Panel - Christmas Edition 🎄</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +13,67 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f0f;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             color: white;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Falling Snow */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            user-select: none;
+            cursor: default;
+            animation-name: snowfall;
+            animation-duration: 10s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate3d(100px, 100vh, 0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        /* Christmas Decorations */
+        .christmas-lights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .light {
+            width: 20px;
+            height: 30px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: blink 1.5s infinite;
+        }
+
+        .light:nth-child(1) { background: #ff0000; animation-delay: 0s; }
+        .light:nth-child(2) { background: #00ff00; animation-delay: 0.3s; }
+        .light:nth-child(3) { background: #0000ff; animation-delay: 0.6s; }
+        .light:nth-child(4) { background: #ffff00; animation-delay: 0.9s; }
+        .light:nth-child(5) { background: #ff00ff; animation-delay: 1.2s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+            50% { opacity: 0.3; }
         }
 
         /* Login Page */
@@ -24,27 +82,18 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
             position: relative;
-        }
-
-        .login-container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%);
+            z-index: 10;
         }
 
         .login-box {
             background: rgba(30, 32, 38, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
             border-radius: 24px;
             padding: 50px 45px;
             width: 480px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.1);
         }
 
         .login-box h1 {
@@ -52,6 +101,14 @@
             font-size: 28px;
             text-align: center;
             margin-bottom: 12px;
+        }
+
+        .login-box h1::before {
+            content: '🎄 ';
+        }
+
+        .login-box h1::after {
+            content: ' 🎄';
         }
 
         .login-box p {
@@ -71,25 +128,16 @@
             margin-bottom: 25px;
         }
 
-        .login-box input:focus {
-            outline: none;
-            border-color: rgba(138, 43, 226, 0.6);
-        }
-
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: white;
-            color: #1e2026;
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
+            color: white;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        .login-btn:hover {
-            background: #f0f0f0;
         }
 
         .error {
@@ -103,29 +151,27 @@
             display: none;
         }
 
-        .error.show {
-            display: block;
-        }
+        .error.show { display: block; }
 
         /* Dashboard */
         .dashboard {
             display: none;
+            position: relative;
+            z-index: 10;
         }
 
-        .dashboard.active {
-            display: flex;
-        }
+        .dashboard.active { display: flex; }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
             height: 100vh;
             position: fixed;
             left: 0;
-            top: 0;
+            top: 40px;
             padding: 20px;
-            border-right: 1px solid #2a2a2a;
+            border-right: 2px solid rgba(255, 215, 0, 0.2);
         }
 
         .logo {
@@ -135,7 +181,7 @@
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 40px;
-            color: #8b5cf6;
+            color: #ffd700;
         }
 
         .nav-item {
@@ -151,18 +197,18 @@
         }
 
         .nav-item:hover {
-            background: #2a2a2a;
+            background: rgba(255, 215, 0, 0.1);
             color: white;
         }
 
         .nav-item.active {
-            background: #8b5cf6;
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             color: white;
         }
 
-        /* Main Content */
         .main-content {
             margin-left: 250px;
+            margin-top: 40px;
             padding: 30px;
             min-height: 100vh;
         }
@@ -173,19 +219,14 @@
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
         }
 
         .welcome-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 14px;
@@ -201,7 +242,6 @@
             font-weight: 600;
         }
 
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -210,8 +250,9 @@
         }
 
         .stat-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             border-radius: 12px;
             padding: 25px;
         }
@@ -225,13 +266,15 @@
         .stat-value {
             font-size: 36px;
             font-weight: 700;
-            color: #8b5cf6;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Cards */
         .card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
@@ -240,30 +283,22 @@
         .card h2 {
             font-size: 20px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .card input, .card select {
+        .card input {
             width: 100%;
             padding: 12px;
-            background: #0f0f0f;
-            border: 1px solid #2a2a2a;
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
             border-radius: 8px;
             color: white;
             margin-bottom: 15px;
         }
 
-        .card input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-        }
-
         .card button {
             width: 100%;
             padding: 12px;
-            background: #8b5cf6;
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -271,14 +306,9 @@
             cursor: pointer;
         }
 
-        .card button:hover {
-            background: #7c3aed;
-        }
-
-        /* Key Items */
         .key-item {
-            background: #0f0f0f;
-            border: 1px solid #2a2a2a;
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 15px;
@@ -288,7 +318,7 @@
         }
 
         .key-info strong {
-            color: #8b5cf6;
+            color: #ffd700;
             font-size: 16px;
             display: block;
             margin-bottom: 8px;
@@ -302,6 +332,7 @@
         .key-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .key-actions button {
@@ -310,17 +341,10 @@
             font-size: 13px;
         }
 
-        .delete-btn {
-            background: #dc2626 !important;
-        }
-
-        .reset-btn {
-            background: #f97316 !important;
-        }
-
-        .toggle-btn {
-            background: #10b981 !important;
-        }
+        .delete-btn { background: #dc2626 !important; }
+        .reset-btn { background: #f97316 !important; }
+        .toggle-btn { background: #10b981 !important; }
+        .blacklist-btn { background: #6b21a8 !important; }
 
         .page {
             display: none;
@@ -329,73 +353,47 @@
         .page.active {
             display: block;
         }
-
-        .info-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .info-banner button {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
     </style>
 </head>
 <body>
-    <!-- Login Container -->
+    <!-- Christmas Lights -->
+    <div class="christmas-lights">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+    </div>
+
+    <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>Log in with API key</h1>
-            <p>Paste your 52-character API key to continue.</p>
+            <h1>Admin Panel</h1>
+            <p>Merry Christmas! 🎅 Enter your API key</p>
             <div class="error" id="errorMsg"></div>
             <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            <button class="login-btn" onclick="login()">Log in</button>
+            <button class="login-btn" onclick="login()">🎁 Log in</button>
         </div>
     </div>
 
     <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
-        <!-- Sidebar -->
         <div class="sidebar">
-            <div class="logo">🔐 Quco Panel</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">
-                📊 Dashboard
-            </div>
-            <div class="nav-item" onclick="showPage('keys')">
-                🔑 Key Management
-            </div>
-            <div class="nav-item" onclick="showPage('generate')">
-                ➕ Generate Keys
-            </div>
-            <div class="nav-item" onclick="showPage('activity')">
-                📜 Recent Activity
-            </div>
+            <div class="logo">🎄 Quco Panel</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="showPage('keys')">🔑 Key Management</div>
+            <div class="nav-item" onclick="showPage('generate')">➕ Generate Keys</div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Top Bar -->
             <div class="top-bar">
-                <div class="user-info">
-                    <span>User: <strong>Admin</strong></span>
-                    <div class="welcome-badge">🔥 Welcome back, Premium User!</div>
-                </div>
+                <div class="welcome-badge">🎅 Merry Christmas, Admin!</div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">📊 Dashboard</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">🎄 Dashboard</h1>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -411,30 +409,24 @@
                         <div class="stat-value" id="activeKeys">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Expired Keys</div>
-                        <div class="stat-value" id="expiredKeys">0</div>
+                        <div class="stat-label">Total Executions</div>
+                        <div class="stat-value" id="totalExecs">0</div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h2>📜 Recent Activity</h2>
-                    <div id="recentActivity">Loading recent activity...</div>
                 </div>
             </div>
 
-            <!-- Generate Keys Page -->
+            <!-- Generate Page -->
             <div class="page" id="page-generate">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
                 <div class="card">
-                    <h2>📝 Create New Key</h2>
-                    <input type="text" id="owner" placeholder="Owner Name (e.g., Username#1234)">
+                    <h2>🎁 Create New Key</h2>
                     <input type="date" id="expires" placeholder="Expiration Date (optional)">
                     <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
-                    <button onclick="generateKey()">Generate Key</button>
+                    <button onclick="generateKey()">🎄 Generate Key</button>
                 </div>
             </div>
 
-            <!-- Key Management Page -->
+            <!-- Keys Page -->
             <div class="page" id="page-keys">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
                 <div class="card">
@@ -442,19 +434,27 @@
                     <div id="keysList"></div>
                 </div>
             </div>
-
-            <!-- Activity Page -->
-            <div class="page" id="page-activity">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">📜 Recent Activity</h1>
-                <div class="card">
-                    <h2>Activity Log</h2>
-                    <p style="color: rgba(255,255,255,0.5);">Activity logging coming soon...</p>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
+        // Create falling snowflakes
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            setInterval(() => {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.style.animationDuration = Math.random() * 3 + 7 + 's';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                document.body.appendChild(snowflake);
+                setTimeout(() => snowflake.remove(), 10000);
+            }, 300);
+        }
+        createSnowflakes();
+
         let adminKey = localStorage.getItem('quco_admin_key') || '';
         const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
 
@@ -532,7 +532,7 @@
 
         async function checkApiStatus() {
             try {
-                const res = await fetch(`${API_URL}/api`);
+                await fetch(`${API_URL}/api`);
                 document.getElementById('apiStatus').textContent = '✅';
             } catch {
                 document.getElementById('apiStatus').textContent = '❌';
@@ -540,7 +540,6 @@
         }
 
         async function generateKey() {
-            const owner = document.getElementById('owner').value || 'Unknown';
             const expires = document.getElementById('expires').value || null;
             const prefix = document.getElementById('prefix').value || 'quco';
 
@@ -551,12 +550,11 @@
                         'Content-Type': 'application/json',
                         'Admin-Key': adminKey
                     },
-                    body: JSON.stringify({ owner, expires, prefix })
+                    body: JSON.stringify({ expires, prefix })
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert(`✅ Key Generated!\n\n${data.key}\n\nCopy this key now!`);
-                    document.getElementById('owner').value = '';
+                    alert(`🎁 Key Generated!\n\n${data.key}\n\nCopy this key now!`);
                     document.getElementById('expires').value = '';
                     document.getElementById('prefix').value = '';
                     loadKeys();
@@ -573,9 +571,11 @@
                 });
                 const data = await res.json();
 
+                const totalExecs = data.keys.reduce((sum, k) => sum + (k.executions || 0), 0);
+
                 document.getElementById('totalKeys').textContent = data.keys.length;
-                document.getElementById('activeKeys').textContent = data.keys.filter(k => k.active).length;
-                document.getElementById('expiredKeys').textContent = data.keys.filter(k => !k.active).length;
+                document.getElementById('activeKeys').textContent = data.keys.filter(k => k.active && !k.blacklisted).length;
+                document.getElementById('totalExecs').textContent = totalExecs;
                 document.getElementById('keyCount').textContent = data.keys.length;
 
                 const list = document.getElementById('keysList');
@@ -584,13 +584,15 @@
                 data.keys.forEach(k => {
                     const div = document.createElement('div');
                     div.className = 'key-item';
+                    const status = k.blacklisted ? '🚫 Blacklisted' : (k.active ? '✅ Active' : '❌ Disabled');
                     div.innerHTML = `
                         <div class="key-info">
                             <strong>${k.key}</strong>
-                            <small>Owner: ${k.owner} | HWID: ${k.hwid || 'Unbound'} | Expires: ${k.expires || 'Never'} | ${k.active ? '✅ Active' : '❌ Disabled'}</small>
+                            <small>UserID: ${k.discordId || '-'} | HWID: ${k.hwid || '-'} | Executions: ${k.executions || 0} | ${status}</small>
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
+                            <button class="blacklist-btn" onclick="blacklistKey('${k.key}')">${k.blacklisted ? 'Unblacklist' : 'Blacklist'}</button>
                             <button class="reset-btn" onclick="resetHWID('${k.key}')">Reset HWID</button>
                             <button class="delete-btn" onclick="deleteKey('${k.key}')">Delete</button>
                         </div>
@@ -613,6 +615,14 @@
 
         async function toggleKey(key) {
             await fetch(`${API_URL}/admin/keys/${key}/toggle`, {
+                method: 'POST',
+                headers: { 'Admin-Key': adminKey }
+            });
+            loadKeys();
+        }
+
+        async function blacklistKey(key) {
+            await fetch(`${API_URL}/admin/keys/${key}/blacklist`, {
                 method: 'POST',
                 headers: { 'Admin-Key': adminKey }
             });
