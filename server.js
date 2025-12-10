@@ -1,172 +1,212 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('public')); // This serves your index.html
 
-// CORS headers for Roblox
+// CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
-    }
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Admin-Key');
+    if (req.method === 'OPTIONS') return res.sendStatus(200);
     next();
 });
 
-// Valid keys database
-const validKeys = {
-    "scriptkey": { 
-        active: true, 
-        hwid: null, 
-        expires: null,
-        owner: "Admin"
-    },
-    "premium_key_123": { 
-        active: true, 
-        hwid: null, 
-        expires: "2025-12-31",
-        owner: "TestUser"
-    },
-    "testkey456": { 
-        active: true, 
-        hwid: "ABC123XYZ", 
-        expires: null,
-        owner: "BoundUser"
-    }
-};
+// Admin key (CHANGE THIS!)
+const ADMIN_KEY = "admin_quco_2024";
 
-// Key validation endpoint (POST)
-app.post('/validate', (req, res) => {
-    const { key, hwid, username } = req.body;
-    
-    console.log(`🔍 Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
-    
-    if (!key) {
-        return res.json({ 
-            success: false, 
-            message: "❌ No key provided" 
-        });
+// Keys file path
+const KEYS_FILE = path.join(__dirname, 'keys.json');
+
+// Initialize keys.json if it doesn't exist
+if (!fs.existsSync(KEYS_FILE)) {
+    fs.writeFileSync(KEYS_FILE, JSON.stringify({
+        "scriptkey": { active: true, hwid: null, expires: null, owner: "Admin", createdAt: new Date().toISOString() },
+        "premium_key_123": { active: true, hwid: null, expires: "2025-12-31", owner: "TestUser", createdAt: new Date().toISOString() }
+    }, null, 2));
+}
+
+// Load keys from file
+function loadKeys() {
+    try {
+        const data = fs.readFileSync(KEYS_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.error('Error loading keys:', err);
+        return {};
     }
-    
-    const keyData = validKeys[key];
-    
-    // Check if key exists
-    if (!keyData) {
-        console.log(`❌ Invalid key: ${key}`);
-        return res.json({ 
-            success: false, 
-            message: "❌ Invalid key" 
-        });
+}
+
+// Save keys to file
+function saveKeys(keys) {
+    try {
+        fs.writeFileSync(KEYS_FILE, JSON.stringify(keys, null, 2));
+        return true;
+    } catch (err) {
+        console.error('Error saving keys:', err);
+        return false;
     }
-    
-    // Check if key is active
-    if (!keyData.active) {
-        console.log(`❌ Disabled key: ${key}`);
-        return res.json({ 
-            success: false, 
-            message: "❌ Key has been disabled" 
-        });
+}
+
+// Middleware to check admin key
+function requireAdmin(req, res, next) {
+    const adminKey = req.headers['admin-key'];
+    if (adminKey !== ADMIN_KEY) {
+        return res.status(403).json({ success: false, message: "Invalid admin key" });
     }
-    
-    // Check HWID binding
-    if (keyData.hwid) {
-        if (keyData.hwid !== hwid) {
-            console.log(`❌ HWID mismatch for key: ${key}`);
-            return res.json({ 
-                success: false, 
-                message: "❌ Key is bound to another device" 
-            });
-        }
-    } else if (hwid) {
-        // First time use - bind to HWID
-        keyData.hwid = hwid;
-        console.log(`🔗 Key ${key} bound to HWID: ${hwid}`);
+    next();
+}
+
+// ===== ADMIN ENDPOINTS =====
+
+// Login / Verify admin key
+app.post('/admin/login', (req, res) => {
+    const { adminKey } = req.body;
+    if (adminKey === ADMIN_KEY) {
+        return res.json({ success: true, message: "Admin authenticated" });
     }
-    
-    // Check expiration
-    if (keyData.expires) {
-        const expireDate = new Date(keyData.expires);
-        if (new Date() > expireDate) {
-            console.log(`❌ Expired key: ${key}`);
-            return res.json({ 
-                success: false, 
-                message: "❌ Key has expired" 
-            });
-        }
-    }
-    
-    // Success!
-    console.log(`✅ Key validated successfully: ${key} for ${username || 'Unknown'}`);
-    
-    return res.json({ 
-        success: true, 
-        message: "✅ Key validated successfully",
-        expires: keyData.expires || "Never",
-        owner: keyData.owner
-    });
+    res.status(403).json({ success: false, message: "Invalid admin key" });
 });
 
-// GET endpoint for executors that block POST
+// Get all keys (admin only)
+app.get('/admin/keys', requireAdmin, (req, res) => {
+    const keys = loadKeys();
+    const keyList = Object.entries(keys).map(([key, data]) => ({
+        key: key,
+        ...data
+    }));
+    res.json({ success: true, keys: keyList });
+});
+
+// Generate new key (admin only)
+app.post('/admin/generate', requireAdmin, (req, res) => {
+    const { owner, expires, prefix } = req.body;
+    
+    // Generate random key
+    const randomStr = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const newKey = (prefix || "quco") + "_" + randomStr;
+    
+    const keys = loadKeys();
+    keys[newKey] = {
+        active: true,
+        hwid: null,
+        expires: expires || null,
+        owner: owner || "Unknown",
+        createdAt: new Date().toISOString()
+    };
+    
+    if (saveKeys(keys)) {
+        console.log(`✅ New key generated: ${newKey} for ${owner}`);
+        res.json({ success: true, key: newKey, message: "Key generated successfully" });
+    } else {
+        res.status(500).json({ success: false, message: "Failed to save key" });
+    }
+});
+
+// Delete key (admin only)
+app.delete('/admin/keys/:key', requireAdmin, (req, res) => {
+    const keyToDelete = req.params.key;
+    const keys = loadKeys();
+    
+    if (keys[keyToDelete]) {
+        delete keys[keyToDelete];
+        if (saveKeys(keys)) {
+            console.log(`🗑️ Key deleted: ${keyToDelete}`);
+            res.json({ success: true, message: "Key deleted successfully" });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to delete key" });
+        }
+    } else {
+        res.status(404).json({ success: false, message: "Key not found" });
+    }
+});
+
+// Toggle key active status (admin only)
+app.post('/admin/keys/:key/toggle', requireAdmin, (req, res) => {
+    const keyToToggle = req.params.key;
+    const keys = loadKeys();
+    
+    if (keys[keyToToggle]) {
+        keys[keyToToggle].active = !keys[keyToToggle].active;
+        if (saveKeys(keys)) {
+            console.log(`🔄 Key toggled: ${keyToToggle} - Active: ${keys[keyToToggle].active}`);
+            res.json({ success: true, active: keys[keyToToggle].active });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to update key" });
+        }
+    } else {
+        res.status(404).json({ success: false, message: "Key not found" });
+    }
+});
+
+// Reset HWID (admin only)
+app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
+    const keyToReset = req.params.key;
+    const keys = loadKeys();
+    
+    if (keys[keyToReset]) {
+        keys[keyToReset].hwid = null;
+        if (saveKeys(keys)) {
+            console.log(`🔓 HWID reset for key: ${keyToReset}`);
+            res.json({ success: true, message: "HWID reset successfully" });
+        } else {
+            res.status(500).json({ success: false, message: "Failed to reset HWID" });
+        }
+    } else {
+        res.status(404).json({ success: false, message: "Key not found" });
+    }
+});
+
+// ===== CLIENT ENDPOINTS =====
+
+// Validate key (GET for Roblox)
 app.get('/validate', (req, res) => {
     const { key, hwid, username } = req.query;
     
-    console.log(`🔍 GET Validation attempt - Key: ${key}, User: ${username || 'Unknown'}, HWID: ${hwid || 'None'}`);
+    console.log(`🔍 Validation - Key: ${key}, User: ${username}, HWID: ${hwid}`);
     
-    if (!key || key === "" || key === "null" || key === "undefined") {
-        console.log(`❌ No key provided`);
-        return res.json({ 
-            success: false, 
-            message: "❌ NOT Whitelisted - No key provided" 
-        });
+    if (!key || key === "" || key === "null") {
+        return res.json({ success: false, message: "❌ NOT Whitelisted - No key provided" });
     }
     
-    const keyData = validKeys[key];
+    const keys = loadKeys();
+    const keyData = keys[key];
     
     if (!keyData) {
         console.log(`❌ Invalid key: ${key}`);
-        return res.json({ 
-            success: false, 
-            message: "❌ Invalid key" 
-        });
+        return res.json({ success: false, message: "❌ Invalid key" });
     }
     
     if (!keyData.active) {
         console.log(`❌ Disabled key: ${key}`);
-        return res.json({ 
-            success: false, 
-            message: "❌ Key has been disabled" 
-        });
+        return res.json({ success: false, message: "❌ Key has been disabled" });
     }
     
-    if (keyData.hwid) {
-        if (keyData.hwid !== hwid) {
-            console.log(`❌ HWID mismatch for key: ${key}`);
-            return res.json({ 
-                success: false, 
-                message: "❌ Key is bound to another device" 
-            });
-        }
-    } else if (hwid) {
+    if (keyData.hwid && keyData.hwid !== hwid) {
+        console.log(`❌ HWID mismatch: ${key}`);
+        return res.json({ success: false, message: "❌ Key is bound to another device" });
+    }
+    
+    if (!keyData.hwid && hwid) {
         keyData.hwid = hwid;
-        console.log(`🔗 Key ${key} bound to HWID: ${hwid}`);
+        saveKeys(keys);
+        console.log(`🔗 Key bound to HWID: ${key}`);
     }
     
     if (keyData.expires) {
         const expireDate = new Date(keyData.expires);
         if (new Date() > expireDate) {
             console.log(`❌ Expired key: ${key}`);
-            return res.json({ 
-                success: false, 
-                message: "❌ Key has expired" 
-            });
+            return res.json({ success: false, message: "❌ Key has expired" });
         }
     }
     
-    console.log(`✅ Key validated successfully: ${key} for ${username || 'Unknown'}`);
-    
-    return res.json({ 
+    console.log(`✅ Key validated: ${key} for ${username}`);
+    res.json({ 
         success: true, 
         message: "✅ Key validated successfully",
         expires: keyData.expires || "Never",
@@ -174,38 +214,22 @@ app.get('/validate', (req, res) => {
     });
 });
 
-// Health check endpoint
-app.get('/', (req, res) => {
+// POST endpoint
+app.post('/validate', (req, res) => {
+    const { key, hwid, username } = req.body;
+    req.query = { key, hwid, username };
+    return app._router.handle(req, res);
+});
+
+// API health check (for JSON response)
+app.get('/api', (req, res) => {
     res.json({ 
-        status: "✅ Key system online",
-        timestamp: new Date().toISOString(),
-        endpoints: {
-            validate: "/validate (POST)",
-            keys: "/keys (GET)",
-            health: "/ (GET)"
-        }
+        status: "✅ Quco Key System Online",
+        timestamp: new Date().toISOString()
     });
 });
 
-// Get all keys (admin only - remove in production or add auth)
-app.get('/keys', (req, res) => {
-    const keyList = Object.entries(validKeys).map(([key, data]) => ({
-        key: key.substring(0, 4) + "***", // Partially hide keys
-        active: data.active,
-        hwid: data.hwid ? "Bound" : "Unbound",
-        expires: data.expires || "Never",
-        owner: data.owner
-    }));
-    
-    res.json({ 
-        total: keyList.length,
-        keys: keyList 
-    });
-});
-
-// Start server
 app.listen(PORT, () => {
-    console.log(`🚀 Key system running on port ${PORT}`);
-    console.log(`📍 Health check: http://localhost:${PORT}/`);
-    console.log(`🔑 Validation endpoint: http://localhost:${PORT}/validate`);
+    console.log(`🚀 Quco Key System running on port ${PORT}`);
+    console.log(`🔑 Admin Key: ${ADMIN_KEY}`);
 });
