@@ -18,18 +18,20 @@ app.use((req, res, next) => {
 const ADMIN_KEY = "admin_quco_2024";
 const KEYS_FILE = path.join(__dirname, 'keys.json');
 
+// Auto-create keys.json on first run
 if (!fs.existsSync(KEYS_FILE)) {
     fs.writeFileSync(KEYS_FILE, JSON.stringify({
         "scriptkey": { 
             active: true, 
             blacklisted: false,
             hwid: null, 
-            expires: null, 
-            discordId: null,
+            userId: null,
             executions: 0,
+            hwidResets: 0,
             createdAt: new Date().toISOString() 
         }
     }, null, 2));
+    console.log('✅ keys.json created automatically');
 }
 
 function loadKeys() {
@@ -77,9 +79,9 @@ app.get('/admin/keys', requireAdmin, (req, res) => {
     res.json({ success: true, keys: keyList });
 });
 
-// Generate new key
+// Generate new key (NO EXPIRATION)
 app.post('/admin/generate', requireAdmin, (req, res) => {
-    const { expires, prefix } = req.body;
+    const { prefix } = req.body;
     
     const randomStr = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const newKey = (prefix || "quco") + "_" + randomStr;
@@ -89,9 +91,9 @@ app.post('/admin/generate', requireAdmin, (req, res) => {
         active: true,
         blacklisted: false,
         hwid: null,
-        expires: expires || null,
-        discordId: null,
+        userId: null,
         executions: 0,
+        hwidResets: 0,
         createdAt: new Date().toISOString()
     };
     
@@ -157,16 +159,17 @@ app.post('/admin/keys/:key/blacklist', requireAdmin, (req, res) => {
     }
 });
 
-// Reset HWID
+// Reset HWID (with counter)
 app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
     const keyToReset = req.params.key;
     const keys = loadKeys();
     
     if (keys[keyToReset]) {
         keys[keyToReset].hwid = null;
+        keys[keyToReset].hwidResets = (keys[keyToReset].hwidResets || 0) + 1;
         if (saveKeys(keys)) {
-            console.log(`🔓 HWID reset for key: ${keyToReset}`);
-            res.json({ success: true, message: "HWID reset successfully" });
+            console.log(`🔓 HWID reset for key: ${keyToReset} (Total resets: ${keys[keyToReset].hwidResets})`);
+            res.json({ success: true, message: "HWID reset successfully", resets: keys[keyToReset].hwidResets });
         } else {
             res.status(500).json({ success: false, message: "Failed to reset HWID" });
         }
@@ -175,11 +178,11 @@ app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
     }
 });
 
-// Validate key (GET for Roblox)
+// Validate key (NO EXPIRATION CHECK)
 app.get('/validate', (req, res) => {
-    const { key, hwid, username, discordId } = req.query;
+    const { key, hwid, username, userId } = req.query;
     
-    console.log(`🔍 Validation - Key: ${key}, User: ${username}, Discord: ${discordId}, HWID: ${hwid}`);
+    console.log(`🔍 Validation - Key: ${key}, User: ${username}, UserID: ${userId}, HWID: ${hwid}`);
     
     if (!key || key === "" || key === "null") {
         return res.json({ success: false, message: "❌ NOT Whitelisted - No key provided" });
@@ -208,27 +211,19 @@ app.get('/validate', (req, res) => {
         return res.json({ success: false, message: "❌ Key is bound to another device" });
     }
     
-    // First time use - bind HWID and Discord ID
+    // First time use - bind HWID and User ID
     if (!keyData.hwid && hwid) {
         keyData.hwid = hwid;
         console.log(`🔗 Key bound to HWID: ${key}`);
     }
 
-    if (!keyData.discordId && discordId) {
-        keyData.discordId = discordId;
-        console.log(`🔗 Key bound to Discord ID: ${discordId}`);
+    if (!keyData.userId && userId) {
+        keyData.userId = userId;
+        console.log(`🔗 Key bound to User ID: ${userId}`);
     }
 
     // Increment execution count
     keyData.executions = (keyData.executions || 0) + 1;
-    
-    if (keyData.expires) {
-        const expireDate = new Date(keyData.expires);
-        if (new Date() > expireDate) {
-            console.log(`❌ Expired key: ${key}`);
-            return res.json({ success: false, message: "❌ Key has expired" });
-        }
-    }
     
     saveKeys(keys);
     console.log(`✅ Key validated: ${key} for ${username} (Execution #${keyData.executions})`);
@@ -236,15 +231,14 @@ app.get('/validate', (req, res) => {
     res.json({ 
         success: true, 
         message: "✅ Key validated successfully",
-        expires: keyData.expires || "Never",
         executions: keyData.executions
     });
 });
 
 // POST endpoint
 app.post('/validate', (req, res) => {
-    const { key, hwid, username, discordId } = req.body;
-    req.query = { key, hwid, username, discordId };
+    const { key, hwid, username, userId } = req.body;
+    req.query = { key, hwid, username, userId };
     return app._router.handle(req, res);
 });
 
@@ -258,4 +252,5 @@ app.get('/api', (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Quco Key System running on port ${PORT}`);
     console.log(`🔑 Admin Key: ${ADMIN_KEY}`);
+    console.log(`📁 Keys file: ${KEYS_FILE}`);
 });
