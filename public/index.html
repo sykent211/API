@@ -420,7 +420,6 @@
                 <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
                 <div class="card">
                     <h2>🎁 Create New Key</h2>
-                    <input type="date" id="expires" placeholder="Expiration Date (optional)">
                     <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
                     <button onclick="generateKey()">🎄 Generate Key</button>
                 </div>
@@ -540,7 +539,6 @@
         }
 
         async function generateKey() {
-            const expires = document.getElementById('expires').value || null;
             const prefix = document.getElementById('prefix').value || 'quco';
 
             try {
@@ -550,12 +548,11 @@
                         'Content-Type': 'application/json',
                         'Admin-Key': adminKey
                     },
-                    body: JSON.stringify({ expires, prefix })
+                    body: JSON.stringify({ prefix })
                 });
                 const data = await res.json();
                 if (data.success) {
                     alert(`🎁 Key Generated!\n\n${data.key}\n\nCopy this key now!`);
-                    document.getElementById('expires').value = '';
                     document.getElementById('prefix').value = '';
                     loadKeys();
                 }
@@ -585,10 +582,11 @@
                     const div = document.createElement('div');
                     div.className = 'key-item';
                     const status = k.blacklisted ? '🚫 Blacklisted' : (k.active ? '✅ Active' : '❌ Disabled');
+                    const hwidDisplay = k.hwid ? k.hwid.substring(0, 12) + '...' : '-';
                     div.innerHTML = `
                         <div class="key-info">
                             <strong>${k.key}</strong>
-                            <small>UserID: ${k.discordId || '-'} | HWID: ${k.hwid || '-'} | Executions: ${k.executions || 0} | ${status}</small>
+                            <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} | ${status}</small>
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
