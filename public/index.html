@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Admin Panel</title>
+    <title>Quco Control Panel</title>
     <style>
         * {
             margin: 0;
@@ -12,37 +12,27 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Login Page */
+        .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
             position: relative;
-            overflow: hidden;
         }
 
-        body::before {
+        .login-container::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.3), transparent 50%);
-            animation: gradient 15s ease infinite;
-        }
-
-        @keyframes gradient {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        .login-container {
-            position: relative;
-            z-index: 1;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%);
         }
 
         .login-box {
@@ -53,24 +43,13 @@
             padding: 50px 45px;
             width: 480px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            position: relative;
+            z-index: 1;
         }
 
         .login-box h1 {
             color: white;
             font-size: 28px;
-            font-weight: 600;
             text-align: center;
             margin-bottom: 12px;
         }
@@ -78,24 +57,10 @@
         .login-box p {
             color: rgba(255, 255, 255, 0.6);
             text-align: center;
-            font-size: 15px;
             margin-bottom: 35px;
         }
 
-        .input-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .input-group input {
+        .login-box input {
             width: 100%;
             padding: 14px 16px;
             background: rgba(255, 255, 255, 0.05);
@@ -103,83 +68,28 @@
             border-radius: 12px;
             color: white;
             font-size: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(138, 43, 226, 0.6);
-            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .signup-link {
-            text-align: center;
             margin-bottom: 25px;
         }
 
-        .signup-link a {
-            color: rgba(138, 43, 226, 1);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .signup-link a:hover {
-            color: rgba(168, 85, 247, 1);
+        .login-box input:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.6);
         }
 
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             color: #1e2026;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
 
         .login-btn:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
-        }
-
-        .login-btn:active {
-            transform: translateY(0);
-        }
-
-        .terms {
-            text-align: center;
-            margin-top: 25px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 13px;
-        }
-
-        .terms a {
-            color: rgba(138, 43, 226, 1);
-            text-decoration: none;
-        }
-
-        .terms a:hover {
-            text-decoration: underline;
-        }
-
-        .icon {
-            width: 18px;
-            height: 18px;
+            background: #f0f0f0;
         }
 
         .error {
@@ -189,125 +99,196 @@
             padding: 12px;
             border-radius: 10px;
             margin-bottom: 20px;
-            font-size: 14px;
             text-align: center;
             display: none;
         }
 
         .error.show {
             display: block;
-            animation: shake 0.5s;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        /* Dashboard Styles */
+        /* Dashboard */
         .dashboard {
             display: none;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
         }
 
         .dashboard.active {
-            display: block;
+            display: flex;
         }
 
-        .dashboard-header {
-            background: rgba(30, 32, 38, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1a1a1a;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            border-right: 1px solid #2a2a2a;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #8b5cf6;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-item:hover {
+            background: #2a2a2a;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
             padding: 30px;
-            margin-bottom: 30px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
         }
 
-        .dashboard-header h1 {
-            color: white;
-            font-size: 32px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .welcome-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         .logout-btn {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: rgba(239, 68, 68, 0.2);
             color: #fca5a5;
             border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
         }
 
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
-        }
-
-        .card {
-            background: rgba(30, 32, 38, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
         }
 
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        /* Cards */
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
         .card h2 {
-            color: white;
-            font-size: 24px;
-            margin-bottom: 25px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .card input, .card select {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            padding: 12px;
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
             color: white;
-            font-size: 14px;
             margin-bottom: 15px;
+        }
+
+        .card input:focus {
+            outline: none;
+            border-color: #8b5cf6;
         }
 
         .card button {
             width: 100%;
             padding: 12px;
-            background: rgba(138, 43, 226, 0.8);
+            background: #8b5cf6;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
         .card button:hover {
-            background: rgba(138, 43, 226, 1);
+            background: #7c3aed;
         }
 
+        /* Key Items */
         .key-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .key-info {
-            flex: 1;
-        }
-
         .key-info strong {
-            color: rgba(138, 43, 226, 1);
+            color: #8b5cf6;
             font-size: 16px;
             display: block;
             margin-bottom: 8px;
@@ -330,77 +311,146 @@
         }
 
         .delete-btn {
-            background: rgba(239, 68, 68, 0.8) !important;
+            background: #dc2626 !important;
         }
 
         .reset-btn {
-            background: rgba(249, 115, 22, 0.8) !important;
+            background: #f97316 !important;
         }
 
-        .loading {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
+        .toggle-btn {
+            background: #10b981 !important;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-banner button {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <!-- Login Page -->
+    <!-- Login Container -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
             <h1>Log in with API key</h1>
             <p>Paste your 52-character API key to continue.</p>
-            
             <div class="error" id="errorMsg"></div>
-            
-            <div class="input-group">
-                <label for="apiKey">API key</label>
-                <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            </div>
-
-            <div class="signup-link">
-                New user? <a href="#" onclick="alert('Contact admin for API key'); return false;">Sign up</a>
-            </div>
-
-            <button class="login-btn" onclick="login()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                </svg>
-                Log in
-            </button>
-
-            <div class="terms">
-                By continuing you agree to our <a href="#">Terms</a>.
-            </div>
+            <input type="password" id="apiKey" placeholder="Enter your admin API key">
+            <button class="login-btn" onclick="login()">Log in</button>
         </div>
     </div>
 
     <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
-        <div class="dashboard-header">
-            <h1>🔐 Quco Admin Dashboard</h1>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">🔐 Quco Panel</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">
+                📊 Dashboard
+            </div>
+            <div class="nav-item" onclick="showPage('keys')">
+                🔑 Key Management
+            </div>
+            <div class="nav-item" onclick="showPage('generate')">
+                ➕ Generate Keys
+            </div>
+            <div class="nav-item" onclick="showPage('activity')">
+                📜 Recent Activity
+            </div>
         </div>
 
-        <div class="card">
-            <h2>📝 Generate New Key</h2>
-            <input type="text" id="owner" placeholder="Owner Name (e.g., Username#1234)">
-            <input type="date" id="expires" placeholder="Expiration Date (optional)">
-            <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
-            <button onclick="generateKey()">Generate Key</button>
-        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="user-info">
+                    <span>User: <strong>Admin</strong></span>
+                    <div class="welcome-badge">🔥 Welcome back, Premium User!</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
 
-        <div class="card">
-            <h2>🔑 Active Keys (<span id="keyCount">0</span>)</h2>
-            <div id="keysList"></div>
+            <!-- Dashboard Page -->
+            <div class="page active" id="page-dashboard">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">📊 Dashboard</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">API Status</div>
+                        <div class="stat-value" id="apiStatus">✅</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Keys</div>
+                        <div class="stat-value" id="totalKeys">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Keys</div>
+                        <div class="stat-value" id="activeKeys">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Expired Keys</div>
+                        <div class="stat-value" id="expiredKeys">0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>📜 Recent Activity</h2>
+                    <div id="recentActivity">Loading recent activity...</div>
+                </div>
+            </div>
+
+            <!-- Generate Keys Page -->
+            <div class="page" id="page-generate">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
+                <div class="card">
+                    <h2>📝 Create New Key</h2>
+                    <input type="text" id="owner" placeholder="Owner Name (e.g., Username#1234)">
+                    <input type="date" id="expires" placeholder="Expiration Date (optional)">
+                    <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
+                    <button onclick="generateKey()">Generate Key</button>
+                </div>
+            </div>
+
+            <!-- Key Management Page -->
+            <div class="page" id="page-keys">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
+                <div class="card">
+                    <h2>🔑 Active Keys (<span id="keyCount">0</span>)</h2>
+                    <div id="keysList"></div>
+                </div>
+            </div>
+
+            <!-- Activity Page -->
+            <div class="page" id="page-activity">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">📜 Recent Activity</h1>
+                <div class="card">
+                    <h2>Activity Log</h2>
+                    <p style="color: rgba(255,255,255,0.5);">Activity logging coming soon...</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -408,25 +458,18 @@
         let adminKey = localStorage.getItem('quco_admin_key') || '';
         const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
 
-        // Check if already logged in
-        if (adminKey) {
-            verifyAndLogin();
-        }
+        if (adminKey) verifyAndLogin();
 
-        function showError(message) {
-            const errorEl = document.getElementById('errorMsg');
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
-            setTimeout(() => errorEl.classList.remove('show'), 3000);
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
         }
 
         async function login() {
             const key = document.getElementById('apiKey').value.trim();
-            
-            if (!key) {
-                showError('Please enter an API key');
-                return;
-            }
+            if (!key) return showError('Please enter an API key');
 
             try {
                 const res = await fetch(`${API_URL}/admin/login`, {
@@ -434,7 +477,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ adminKey: key })
                 });
-
                 const data = await res.json();
                 
                 if (data.success) {
@@ -442,12 +484,12 @@
                     localStorage.setItem('quco_admin_key', key);
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
-                    loadKeys();
+                    loadDashboard();
                 } else {
-                    showError('Invalid API key. Please try again.');
+                    showError('Invalid API key');
                 }
             } catch (err) {
-                showError('Connection error. Please try again.');
+                showError('Connection error');
             }
         }
 
@@ -456,24 +498,45 @@
                 const res = await fetch(`${API_URL}/admin/keys`, {
                     headers: { 'Admin-Key': adminKey }
                 });
-
                 if (res.ok) {
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
-                    loadKeys();
+                    loadDashboard();
                 } else {
                     localStorage.removeItem('quco_admin_key');
                     adminKey = '';
                 }
             } catch (err) {
-                console.error('Verification failed:', err);
+                console.error(err);
             }
         }
 
         function logout() {
             localStorage.removeItem('quco_admin_key');
-            adminKey = '';
             location.reload();
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (page === 'keys') loadKeys();
+        }
+
+        async function loadDashboard() {
+            loadKeys();
+            checkApiStatus();
+        }
+
+        async function checkApiStatus() {
+            try {
+                const res = await fetch(`${API_URL}/api`);
+                document.getElementById('apiStatus').textContent = '✅';
+            } catch {
+                document.getElementById('apiStatus').textContent = '❌';
+            }
         }
 
         async function generateKey() {
@@ -490,7 +553,6 @@
                     },
                     body: JSON.stringify({ owner, expires, prefix })
                 });
-
                 const data = await res.json();
                 if (data.success) {
                     alert(`✅ Key Generated!\n\n${data.key}\n\nCopy this key now!`);
@@ -511,10 +573,12 @@
                 });
                 const data = await res.json();
 
+                document.getElementById('totalKeys').textContent = data.keys.length;
+                document.getElementById('activeKeys').textContent = data.keys.filter(k => k.active).length;
+                document.getElementById('expiredKeys').textContent = data.keys.filter(k => !k.active).length;
+                document.getElementById('keyCount').textContent = data.keys.length;
+
                 const list = document.getElementById('keysList');
-                const count = document.getElementById('keyCount');
-                
-                count.textContent = data.keys.length;
                 list.innerHTML = '';
 
                 data.keys.forEach(k => {
@@ -523,10 +587,10 @@
                     div.innerHTML = `
                         <div class="key-info">
                             <strong>${k.key}</strong>
-                            <small>Owner: ${k.owner} | HWID: ${k.hwid || 'Unbound'} | Expires: ${k.expires || 'Never'} | Status: ${k.active ? '✅ Active' : '❌ Disabled'}</small>
+                            <small>Owner: ${k.owner} | HWID: ${k.hwid || 'Unbound'} | Expires: ${k.expires || 'Never'} | ${k.active ? '✅ Active' : '❌ Disabled'}</small>
                         </div>
                         <div class="key-actions">
-                            <button onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
+                            <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
                             <button class="reset-btn" onclick="resetHWID('${k.key}')">Reset HWID</button>
                             <button class="delete-btn" onclick="deleteKey('${k.key}')">Delete</button>
                         </div>
@@ -534,13 +598,12 @@
                     list.appendChild(div);
                 });
             } catch (err) {
-                console.error('Failed to load keys:', err);
+                console.error(err);
             }
         }
 
         async function deleteKey(key) {
             if (!confirm(`Delete key: ${key}?`)) return;
-            
             await fetch(`${API_URL}/admin/keys/${key}`, {
                 method: 'DELETE',
                 headers: { 'Admin-Key': adminKey }
@@ -558,7 +621,6 @@
 
         async function resetHWID(key) {
             if (!confirm(`Reset HWID for: ${key}?`)) return;
-            
             await fetch(`${API_URL}/admin/keys/${key}/reset-hwid`, {
                 method: 'POST',
                 headers: { 'Admin-Key': adminKey }
@@ -566,7 +628,6 @@
             loadKeys();
         }
 
-        // Allow Enter key to login
         document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
         });
