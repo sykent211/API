@@ -79,12 +79,14 @@ app.get('/admin/keys', requireAdmin, (req, res) => {
     res.json({ success: true, keys: keyList });
 });
 
-// Generate new key (NO EXPIRATION)
+// Generate new key (32 random characters)
 app.post('/admin/generate', requireAdmin, (req, res) => {
-    const { prefix } = req.body;
-    
-    const randomStr = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const newKey = (prefix || "quco") + "_" + randomStr;
+    // Generate 32 random alphanumeric characters
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let newKey = '';
+    for (let i = 0; i < 32; i++) {
+        newKey += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
     
     const keys = loadKeys();
     keys[newKey] = {
