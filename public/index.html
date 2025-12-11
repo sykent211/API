@@ -681,12 +681,12 @@
 
             <!-- Obfuscate Page -->
             <div class="page" id="page-obfuscate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate Script</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate</h1>
                 <div class="card">
                     <h2>Script Obfuscation</h2>
                     <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">
-                        Step 1: Put your script into a loadstring<br>
-                        Step 2: Paste the loadstring here to obfuscate it
+                        Step 1: Convert your script to loadstring<br>
+                        Step 2: Paste it here to get obfuscated version
                     </p>
                     <button onclick="openObfuscateModal()">Obfuscate Script</button>
                 </div>
@@ -817,15 +817,15 @@
                 return;
             }
 
-            // Generate random loader ID (like Luarmor style)
+            // Generate random loader ID (32 characters)
             const chars = 'abcdef0123456789';
             let loaderID = '';
             for (let i = 0; i < 32; i++) {
                 loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
             }
 
-            // Create obfuscated loadstring
-            const obfuscated = `loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/${loaderID}.lua"))()`;
+            // Create obfuscated loadstring with custom domain
+            const obfuscated = `loadstring(game:HttpGet("https://wowwww.net/files/v3/loaders/${loaderID}.lua"))()`;
             
             document.getElementById('scriptOutput').value = obfuscated;
             document.getElementById('copyBtn').style.display = 'inline-block';
