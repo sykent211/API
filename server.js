@@ -31,7 +31,7 @@ if (!fs.existsSync(KEYS_FILE)) {
             createdAt: new Date().toISOString() 
         }
     }, null, 2));
-    console.log('✅ keys.json created automatically');
+    console.log('keys.json created automatically');
 }
 
 function loadKeys() {
@@ -124,7 +124,7 @@ app.delete('/admin/keys/:key', requireAdmin, (req, res) => {
     if (keys[keyToDelete]) {
         delete keys[keyToDelete];
         if (saveKeys(keys)) {
-            console.log(`🗑️ Key deleted: ${keyToDelete}`);
+            console.log(`Key deleted: ${keyToDelete}`);
             res.json({ success: true, message: "Key deleted successfully" });
         } else {
             res.status(500).json({ success: false, message: "Failed to delete key" });
@@ -142,7 +142,7 @@ app.post('/admin/keys/:key/toggle', requireAdmin, (req, res) => {
     if (keys[keyToToggle]) {
         keys[keyToToggle].active = !keys[keyToToggle].active;
         if (saveKeys(keys)) {
-            console.log(`🔄 Key toggled: ${keyToToggle} - Active: ${keys[keyToToggle].active}`);
+            console.log(`Key toggled: ${keyToToggle} - Active: ${keys[keyToToggle].active}`);
             res.json({ success: true, active: keys[keyToToggle].active });
         } else {
             res.status(500).json({ success: false, message: "Failed to update key" });
@@ -160,7 +160,7 @@ app.post('/admin/keys/:key/blacklist', requireAdmin, (req, res) => {
     if (keys[keyToBlacklist]) {
         keys[keyToBlacklist].blacklisted = !keys[keyToBlacklist].blacklisted;
         if (saveKeys(keys)) {
-            console.log(`🚫 Key blacklist toggled: ${keyToBlacklist} - Blacklisted: ${keys[keyToBlacklist].blacklisted}`);
+            console.log(`Key blacklist toggled: ${keyToBlacklist} - Blacklisted: ${keys[keyToBlacklist].blacklisted}`);
             res.json({ success: true, blacklisted: keys[keyToBlacklist].blacklisted });
         } else {
             res.status(500).json({ success: false, message: "Failed to update key" });
@@ -179,7 +179,7 @@ app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
         keys[keyToReset].hwid = null;
         keys[keyToReset].hwidResets = (keys[keyToReset].hwidResets || 0) + 1;
         if (saveKeys(keys)) {
-            console.log(`🔓 HWID reset for key: ${keyToReset} (Total resets: ${keys[keyToReset].hwidResets})`);
+            console.log(`HWID reset for key: ${keyToReset} (Total resets: ${keys[keyToReset].hwidResets})`);
             res.json({ success: true, message: "HWID reset successfully", resets: keys[keyToReset].hwidResets });
         } else {
             res.status(500).json({ success: false, message: "Failed to reset HWID" });
@@ -193,7 +193,7 @@ app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
 app.get('/validate', (req, res) => {
     const { key, hwid, username, userId } = req.query;
     
-    console.log(`🔍 Validation - Key: ${key}, User: ${username}, UserID: ${userId}, HWID: ${hwid}`);
+    console.log(`Validation - Key: ${key}, User: ${username}, UserID: ${userId}, HWID: ${hwid}`);
     
     if (!key || key === "" || key === "null") {
         return res.json({ success: false, message: "No key provided" });
@@ -261,7 +261,7 @@ app.get('/api', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Quco Key System running on port ${PORT}`);
-    console.log(`🔑 Admin Key: ${ADMIN_KEY}`);
-    console.log(`📁 Keys file: ${KEYS_FILE}`);
+    console.log(`Quco Key System running on port ${PORT}`);
+    console.log(`Admin Key: ${ADMIN_KEY}`);
+    console.log(`Keys file: ${KEYS_FILE}`);
 });
