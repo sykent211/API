@@ -302,19 +302,12 @@
 
         .key-info {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .key-text {
-            flex: 1;
         }
 
         .key-info strong {
             color: #667eea;
             font-size: 16px;
-            display: block;
+            display: inline-block;
             margin-bottom: 8px;
             cursor: pointer;
             user-select: none;
@@ -325,22 +318,21 @@
         }
 
         .copy-key-btn {
-            padding: 6px 14px;
+            padding: 4px 10px;
             background: rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.5);
-            border-radius: 6px;
+            border-radius: 5px;
             color: #667eea;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            white-space: nowrap;
-            margin-left: 15px;
+            margin-left: 8px;
+            display: inline-block;
         }
 
         .copy-key-btn:hover {
             background: rgba(102, 126, 234, 0.4);
-            transform: translateY(-1px);
         }
 
         .key-hidden {
@@ -921,11 +913,10 @@
                     const statusText = k.blacklisted ? 'Blacklisted' : '';
                     div.innerHTML = `
                         <div class="key-info">
-                            <div class="key-text">
-                                <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</strong>
-                                <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
-                            </div>
+                            <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</strong>
                             <button class="copy-key-btn" onclick="copyKey('${k.key}')">Copy</button>
+                            <br>
+                            <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
