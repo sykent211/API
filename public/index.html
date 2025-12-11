@@ -307,32 +307,45 @@
         .key-info strong {
             color: #667eea;
             font-size: 16px;
-            display: inline-block;
             margin-bottom: 8px;
             cursor: pointer;
             user-select: none;
+            display: block;
         }
 
         .key-info strong:hover {
             opacity: 0.8;
         }
 
+        .key-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .key-text {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .copy-key-btn {
-            padding: 4px 10px;
+            padding: 4px 12px;
             background: rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.5);
-            border-radius: 5px;
+            border-radius: 6px;
             color: #667eea;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            margin-left: 8px;
-            display: inline-block;
         }
 
         .copy-key-btn:hover {
             background: rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
         }
 
         .key-hidden {
@@ -671,7 +684,10 @@
                 <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate Script</h1>
                 <div class="card">
                     <h2>Script Obfuscation</h2>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">Protect your Lua scripts by obfuscating them. This makes your code harder to read and reverse-engineer.</p>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">
+                        Step 1: Put your script into a loadstring<br>
+                        Step 2: Paste the loadstring here to obfuscate it
+                    </p>
                     <button onclick="openObfuscateModal()">Obfuscate Script</button>
                 </div>
             </div>
@@ -884,7 +900,8 @@
                 element.textContent = `License Key: ${key}`;
             } else {
                 element.classList.add('key-hidden');
-                element.textContent = `License Key: ${key.substring(0, 2)}${'*'.repeat(8)}${key.substring(10)}`;
+                const maskedKey = `${key.substring(0, 2)}${'*'.repeat(8)}${key.substring(10)}`;
+                element.textContent = `License Key: ${maskedKey}`;
             }
         }
 
@@ -913,9 +930,10 @@
                     const statusText = k.blacklisted ? 'Blacklisted' : '';
                     div.innerHTML = `
                         <div class="key-info">
-                            <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</strong>
-                            <button class="copy-key-btn" onclick="copyKey('${k.key}')">Copy</button>
-                            <br>
+                            <div class="key-line">
+                                <span class="key-text key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</span>
+                                <button class="copy-key-btn" onclick="copyKey('${k.key}')">Copy</button>
+                            </div>
                             <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
                         </div>
                         <div class="key-actions">
