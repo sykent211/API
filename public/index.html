@@ -435,7 +435,7 @@
     <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>Admin Panel</h1>
+            <h1>Quco Login</h1>
             <p>Merry Christmas! 🎅 Enter your API key</p>
             <div class="error" id="errorMsg"></div>
             <input type="password" id="apiKey" placeholder="Enter your admin API key">
@@ -609,10 +609,17 @@
                 const data = await res.json();
                 
                 if (data.success) {
-                    document.getElementById('generatedKey').textContent = data.key;
-                    document.getElementById('totalGenerated').textContent = data.totalGenerated;
-                    document.getElementById('createdAt').textContent = new Date().toLocaleString();
-                    document.getElementById('keyModal').classList.add('show');
+                    const keyElement = document.getElementById('generatedKey');
+                    const totalElement = document.getElementById('totalGenerated');
+                    const timeElement = document.getElementById('createdAt');
+                    
+                    if (keyElement) keyElement.textContent = data.key;
+                    if (totalElement) totalElement.textContent = data.totalGenerated;
+                    if (timeElement) timeElement.textContent = new Date().toLocaleString();
+                    
+                    const modal = document.getElementById('keyModal');
+                    if (modal) modal.classList.add('show');
+                    
                     loadKeys();
                 } else {
                     alert('Failed to generate key: ' + (data.message || 'Unknown error'));
