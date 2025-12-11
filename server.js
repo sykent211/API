@@ -79,16 +79,20 @@ app.get('/admin/keys', requireAdmin, (req, res) => {
     res.json({ success: true, keys: keyList });
 });
 
-// Generate new key (32 random characters)
+// Generate new key (12 random characters)
 app.post('/admin/generate', requireAdmin, (req, res) => {
-    // Generate 32 random alphanumeric characters
+    // Generate 12 random alphanumeric characters
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let newKey = '';
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 12; i++) {
         newKey += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     
     const keys = loadKeys();
+    
+    // Count total keys generated
+    const totalGenerated = Object.keys(keys).length + 1;
+    
     keys[newKey] = {
         active: true,
         blacklisted: false,
@@ -100,8 +104,13 @@ app.post('/admin/generate', requireAdmin, (req, res) => {
     };
     
     if (saveKeys(keys)) {
-        console.log(`✅ New key generated: ${newKey}`);
-        res.json({ success: true, key: newKey, message: "Key generated successfully" });
+        console.log(`New key generated: ${newKey} (Total: ${totalGenerated})`);
+        res.json({ 
+            success: true, 
+            key: newKey, 
+            totalGenerated: totalGenerated,
+            message: "Key generated successfully" 
+        });
     } else {
         res.status(500).json({ success: false, message: "Failed to save key" });
     }
@@ -187,52 +196,52 @@ app.get('/validate', (req, res) => {
     console.log(`🔍 Validation - Key: ${key}, User: ${username}, UserID: ${userId}, HWID: ${hwid}`);
     
     if (!key || key === "" || key === "null") {
-        return res.json({ success: false, message: "❌ NOT Whitelisted - No key provided" });
+        return res.json({ success: false, message: "No key provided" });
     }
     
     const keys = loadKeys();
     const keyData = keys[key];
     
     if (!keyData) {
-        console.log(`❌ Invalid key: ${key}`);
-        return res.json({ success: false, message: "❌ Invalid key" });
+        console.log(`Invalid key: ${key}`);
+        return res.json({ success: false, message: "Invalid key" });
     }
 
     if (keyData.blacklisted) {
-        console.log(`🚫 Blacklisted key: ${key}`);
-        return res.json({ success: false, message: "❌ Key has been blacklisted" });
+        console.log(`Blacklisted key: ${key}`);
+        return res.json({ success: false, message: "Key has been blacklisted" });
     }
     
     if (!keyData.active) {
-        console.log(`❌ Disabled key: ${key}`);
-        return res.json({ success: false, message: "❌ Key has been disabled" });
+        console.log(`Disabled key: ${key}`);
+        return res.json({ success: false, message: "Key has been disabled" });
     }
     
     if (keyData.hwid && keyData.hwid !== hwid) {
-        console.log(`❌ HWID mismatch: ${key}`);
-        return res.json({ success: false, message: "❌ Key is bound to another device" });
+        console.log(`HWID mismatch: ${key}`);
+        return res.json({ success: false, message: "Key is bound to another device" });
     }
     
     // First time use - bind HWID and User ID
     if (!keyData.hwid && hwid) {
         keyData.hwid = hwid;
-        console.log(`🔗 Key bound to HWID: ${key}`);
+        console.log(`Key bound to HWID: ${key}`);
     }
 
     if (!keyData.userId && userId) {
         keyData.userId = userId;
-        console.log(`🔗 Key bound to User ID: ${userId}`);
+        console.log(`Key bound to User ID: ${userId}`);
     }
 
     // Increment execution count
     keyData.executions = (keyData.executions || 0) + 1;
     
     saveKeys(keys);
-    console.log(`✅ Key validated: ${key} for ${username} (Execution #${keyData.executions})`);
+    console.log(`Key validated: ${key} for ${username} (Execution #${keyData.executions})`);
     
     res.json({ 
         success: true, 
-        message: "✅ Key validated successfully",
+        message: "Key validated successfully",
         executions: keyData.executions
     });
 });
@@ -246,7 +255,7 @@ app.post('/validate', (req, res) => {
 
 app.get('/api', (req, res) => {
     res.json({ 
-        status: "✅ Quco Key System Online",
+        status: "Quco Key System Online",
         timestamp: new Date().toISOString()
     });
 });
