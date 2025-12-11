@@ -307,10 +307,28 @@
             margin-bottom: 8px;
             cursor: pointer;
             user-select: none;
+            position: relative;
         }
 
         .key-info strong:hover {
             opacity: 0.8;
+        }
+
+        .copy-key-btn {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 4px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            border-radius: 6px;
+            color: #667eea;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-key-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
         }
 
         .key-hidden {
@@ -461,8 +479,38 @@
 
         .obfuscate-content p {
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .input-row {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-row label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-row input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.6);
         }
 
         .obfuscate-textarea {
@@ -717,7 +765,8 @@
 
         function openObfuscateModal() {
             document.getElementById('obfuscateModal').classList.add('show');
-            document.getElementById('scriptInput').value = '';
+            document.getElementById('loadstringInput').value = '';
+            document.getElementById('scriptOutput').value = '';
             document.getElementById('copyBtn').style.display = 'none';
         }
 
@@ -726,49 +775,49 @@
         }
 
         function obfuscateScript() {
-            const input = document.getElementById('scriptInput').value;
+            const loadstringUrl = document.getElementById('loadstringInput').value.trim();
             
-            if (!input.trim()) {
-                alert('Please paste a script to obfuscate!');
+            if (!loadstringUrl) {
+                alert('Please enter a loadstring URL!');
                 return;
             }
 
-            // Simple obfuscation (you can replace this with actual obfuscation API)
-            const obfuscated = simpleObfuscate(input);
-            
-            document.getElementById('scriptInput').value = obfuscated;
-            document.getElementById('copyBtn').style.display = 'inline-block';
-        }
-
-        function simpleObfuscate(code) {
-            // Basic obfuscation - encode strings and add random variables
-            let obfuscated = '-- Obfuscated by Quco\n';
-            obfuscated += 'local _=function(...)return(...)end;';
-            obfuscated += 'local __=tonumber;local ___=string.char;';
-            obfuscated += 'local ____=table.concat;local _____=string.sub;\n';
-            
-            // Convert code to byte array
-            const bytes = [];
-            for (let i = 0; i < code.length; i++) {
-                bytes.push(code.charCodeAt(i));
+            // Generate random loader ID (like Luarmor style)
+            const chars = 'abcdef0123456789';
+            let loaderID = '';
+            for (let i = 0; i < 32; i++) {
+                loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
             }
+
+            // Create obfuscated loadstring
+            const obfuscated = `loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/${loaderID}.lua"))()`;
             
-            obfuscated += `local ______={${bytes.join(',')}};`;
-            obfuscated += 'local _______="";';
-            obfuscated += 'for _________=1,#______ do _______=_______..___(______[_________])end;';
-            obfuscated += 'loadstring(_______)()';
+            document.getElementById('scriptOutput').value = obfuscated;
+            document.getElementById('copyBtn').style.display = 'inline-block';
             
-            return obfuscated;
+            // Store the mapping (in production, save this to database)
+            console.log(`Loader ID: ${loaderID} -> Original URL: ${loadstringUrl}`);
         }
 
         function copyObfuscated() {
-            const textarea = document.getElementById('scriptInput');
+            const textarea = document.getElementById('scriptOutput');
             textarea.select();
             document.execCommand('copy');
             
             const msg = document.getElementById('successMsg');
             msg.classList.add('show');
             setTimeout(() => msg.classList.remove('show'), 2000);
+        }
+
+        function copyKey(key) {
+            const textarea = document.createElement('textarea');
+            textarea.value = key;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            alert('Key copied to clipboard!');
         }
 
         async function generateKey() {
@@ -845,7 +894,10 @@
                     const statusText = k.blacklisted ? 'Blacklisted' : '';
                     div.innerHTML = `
                         <div class="key-info">
-                            <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</strong>
+                            <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">
+                                License Key: ${maskedKey}
+                                <button class="copy-key-btn" onclick="event.stopPropagation(); copyKey('${k.key}')">Copy</button>
+                            </strong>
                             <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
                         </div>
                         <div class="key-actions">
