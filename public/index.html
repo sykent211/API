@@ -652,18 +652,32 @@
                 return;
             }
 
-            const chars = 'abcdef0123456789';
-            let loaderID = '';
-            for (let i = 0; i < 32; i++) {
-                loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
+            // Show loading
+            document.getElementById('scriptOutput').value = 'Generating obfuscated loader...';
 
-            const obfuscated = `loadstring(game:HttpGet("https://wowwww.net/files/v3/loaders/${loaderID}.lua"))()`;
-            
-            document.getElementById('scriptOutput').value = obfuscated;
-            document.getElementById('copyBtn').style.display = 'inline-block';
-            
-            console.log(`Loader ID: ${loaderID} -> Original URL: ${loadstringUrl}`);
+            // Call backend to create obfuscated loader
+            fetch(`${API_URL}/admin/obfuscate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Admin-Key': adminKey
+                },
+                body: JSON.stringify({ scriptUrl: loadstringUrl })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('scriptOutput').value = data.obfuscatedUrl;
+                    document.getElementById('copyBtn').style.display = 'inline-block';
+                } else {
+                    alert('Failed to obfuscate: ' + data.message);
+                    document.getElementById('scriptOutput').value = '';
+                }
+            })
+            .catch(err => {
+                alert('Error: ' + err.message);
+                document.getElementById('scriptOutput').value = '';
+            });
         }
 
         function copyObfuscated() {
