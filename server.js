@@ -17,8 +17,9 @@ app.use((req, res, next) => {
 
 const ADMIN_KEY = "admin_quco_2024";
 const KEYS_FILE = path.join(__dirname, 'keys.json');
+const LOADERS_FILE = path.join(__dirname, 'loaders.json');
 
-// Auto-create keys.json on first run
+// Initialize files
 if (!fs.existsSync(KEYS_FILE)) {
     fs.writeFileSync(KEYS_FILE, JSON.stringify({
         "scriptkey": { 
@@ -34,10 +35,14 @@ if (!fs.existsSync(KEYS_FILE)) {
     console.log('keys.json created automatically');
 }
 
+if (!fs.existsSync(LOADERS_FILE)) {
+    fs.writeFileSync(LOADERS_FILE, JSON.stringify({}, null, 2));
+    console.log('loaders.json created automatically');
+}
+
 function loadKeys() {
     try {
-        const data = fs.readFileSync(KEYS_FILE, 'utf8');
-        return JSON.parse(data);
+        return JSON.parse(fs.readFileSync(KEYS_FILE, 'utf8'));
     } catch (err) {
         return {};
     }
@@ -46,6 +51,23 @@ function loadKeys() {
 function saveKeys(keys) {
     try {
         fs.writeFileSync(KEYS_FILE, JSON.stringify(keys, null, 2));
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+function loadLoaders() {
+    try {
+        return JSON.parse(fs.readFileSync(LOADERS_FILE, 'utf8'));
+    } catch (err) {
+        return {};
+    }
+}
+
+function saveLoaders(loaders) {
+    try {
+        fs.writeFileSync(LOADERS_FILE, JSON.stringify(loaders, null, 2));
         return true;
     } catch (err) {
         return false;
@@ -260,8 +282,67 @@ app.get('/api', (req, res) => {
     });
 });
 
+// Obfuscate and store script
+app.post('/admin/obfuscate', requireAdmin, (req, res) => {
+    const { scriptUrl } = req.body;
+    
+    if (!scriptUrl) {
+        return res.status(400).json({ success: false, message: "No script URL provided" });
+    }
+
+    // Generate random loader ID
+    const chars = 'abcdef0123456789';
+    let loaderID = '';
+    for (let i = 0; i < 32; i++) {
+        loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Store the mapping
+    const loaders = loadLoaders();
+    loaders[loaderID] = {
+        originalUrl: scriptUrl,
+        createdAt: new Date().toISOString()
+    };
+    
+    if (saveLoaders(loaders)) {
+        console.log(`Obfuscated script created: ${loaderID}`);
+        res.json({ 
+            success: true, 
+            loaderID: loaderID,
+            obfuscatedUrl: `loadstring(game:HttpGet("https://quco-panel-production-de6a.up.railway.app/files/v3/loaders/${loaderID}.lua"))()`
+        });
+    } else {
+        res.status(500).json({ success: false, message: "Failed to save loader" });
+    }
+});
+
+// Serve obfuscated loader
+app.get('/files/v3/loaders/:loaderID.lua', (req, res) => {
+    const loaderID = req.params.loaderID;
+    const loaders = loadLoaders();
+    
+    if (!loaders[loaderID]) {
+        return res.status(404).send('-- Loader not found');
+    }
+
+    const originalUrl = loaders[loaderID].originalUrl;
+    
+    // Generate obfuscated loader that fetches the original script
+    const obfuscatedScript = `
+-- Obfuscated by Quco
+local _0x1=string.char;local _0x2=string.byte;local _0x3=table.concat;
+local _0x4=string.sub;local _0x5=loadstring;local _0x6=game;
+local _0x7=_0x6:GetService("HttpService");local _0x8="${originalUrl}";
+local _0x9=_0x6:HttpGet(_0x8,true);_0x5(_0x9)();
+    `.trim();
+
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(obfuscatedScript);
+});
+
 app.listen(PORT, () => {
     console.log(`Quco Key System running on port ${PORT}`);
     console.log(`Admin Key: ${ADMIN_KEY}`);
     console.log(`Keys file: ${KEYS_FILE}`);
+    console.log(`Loaders file: ${LOADERS_FILE}`);
 });
