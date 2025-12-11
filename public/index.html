@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco</title>
+    <title>Quco Control Panel - Christmas Edition 🎄</title>
     <style>
         * {
             margin: 0;
@@ -305,6 +305,17 @@
             font-size: 16px;
             display: block;
             margin-bottom: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .key-info strong:hover {
+            opacity: 0.8;
+        }
+
+        .key-hidden {
+            filter: blur(8px);
+            transition: filter 0.3s;
         }
 
         .key-info small {
@@ -335,6 +346,81 @@
 
         .page.active {
             display: block;
+        }
+
+        .key-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .key-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(20, 25, 40, 0.98);
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .key-display {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: #fff;
+            margin: 20px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            word-break: break-all;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .stat-row span:first-child {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-row span:last-child {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -374,12 +460,12 @@
 
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">🎄 Dashboard</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">Dashboard</h1>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">API Status</div>
-                        <div class="stat-value" id="apiStatus">✅</div>
+                        <div class="stat-value" id="apiStatus">Active</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Keys</div>
@@ -398,18 +484,18 @@
 
             <!-- Generate Page -->
             <div class="page" id="page-generate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">Generate Keys</h1>
                 <div class="card">
-                    <h2>🎁 Create New Key</h2>
-                    <button onclick="generateKey()">🎄 Generate Key</button>
+                    <h2>Create New Key</h2>
+                    <button onclick="generateKey()">Generate Key</button>
                 </div>
             </div>
 
             <!-- Keys Page -->
             <div class="page" id="page-keys">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">Key Management</h1>
                 <div class="card">
-                    <h2>🔑 Active Keys (<span id="keyCount">0</span>)</h2>
+                    <h2>Active Keys (<span id="keyCount">0</span>)</h2>
                     <div id="keysList"></div>
                 </div>
             </div>
@@ -495,10 +581,14 @@
         async function checkApiStatus() {
             try {
                 await fetch(`${API_URL}/api`);
-                document.getElementById('apiStatus').textContent = '✅';
+                document.getElementById('apiStatus').textContent = 'Active';
             } catch {
-                document.getElementById('apiStatus').textContent = '❌';
+                document.getElementById('apiStatus').textContent = 'Offline';
             }
+        }
+
+        function closeModal() {
+            document.getElementById('keyModal').classList.remove('show');
         }
 
         async function generateKey() {
@@ -513,7 +603,10 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert(`🎁 Key Generated!\n\n${data.key}\n\nCopy this key now!`);
+                    document.getElementById('generatedKey').textContent = data.key;
+                    document.getElementById('totalGenerated').textContent = data.totalGenerated;
+                    document.getElementById('createdAt').textContent = new Date().toLocaleString();
+                    document.getElementById('keyModal').classList.add('show');
                     loadKeys();
                 }
             } catch (err) {
@@ -521,9 +614,14 @@
             }
         }
 
-        function maskKey(key) {
-            if (key.length <= 6) return key;
-            return key.substring(0, 2) + '*'.repeat(key.length - 4) + key.substring(key.length - 2);
+        function toggleKeyVisibility(element, key) {
+            if (element.classList.contains('key-hidden')) {
+                element.classList.remove('key-hidden');
+                element.textContent = `License Key: ${key}`;
+            } else {
+                element.classList.add('key-hidden');
+                element.textContent = `License Key: ${key.substring(0, 2)}${'*'.repeat(8)}${key.substring(10)}`;
+            }
         }
 
         async function loadKeys() {
@@ -547,11 +645,11 @@
                     const div = document.createElement('div');
                     div.className = 'key-item';
                     const hwidDisplay = k.hwid ? k.hwid.substring(0, 12) + '...' : '-';
-                    const maskedKey = maskKey(k.key);
-                    const statusText = k.blacklisted ? '🚫 Blacklisted' : '';
+                    const maskedKey = `${k.key.substring(0, 2)}${'*'.repeat(8)}${k.key.substring(10)}`;
+                    const statusText = k.blacklisted ? 'Blacklisted' : '';
                     div.innerHTML = `
                         <div class="key-info">
-                            <strong>License Key: ${maskedKey}</strong>
+                            <strong class="key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</strong>
                             <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
                         </div>
                         <div class="key-actions">
