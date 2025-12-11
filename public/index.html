@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco v2.0</title>
+    <title>Quco Panel</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -19,7 +15,7 @@
             position: relative;
         }
 
-        /* Snow Background Effect */
+        /* Snow Background */
         .snow-container {
             position: fixed;
             top: 0;
@@ -38,29 +34,20 @@
             background-image: 
                 radial-gradient(2px 2px at 20px 30px, white, transparent),
                 radial-gradient(2px 2px at 40px 70px, white, transparent),
-                radial-gradient(1px 1px at 50px 50px, white, transparent),
-                radial-gradient(1px 1px at 130px 80px, white, transparent),
-                radial-gradient(2px 2px at 80px 10px, white, transparent);
+                radial-gradient(1px 1px at 50px 50px, white, transparent);
             background-size: 200px 200px;
             animation: snow 10s linear infinite;
         }
 
         @keyframes snow {
-            0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
-            100% { background-position: 500px 1000px, 400px 400px, 300px 300px, 200px 200px, 100px 100px; }
+            0% { background-position: 0px 0px, 0px 0px, 0px 0px; }
+            100% { background-position: 500px 1000px, 400px 400px, 300px 300px; }
         }
 
-        .snow-layer-2 {
-            animation: snow 15s linear infinite;
-            opacity: 0.5;
-        }
+        .snow-layer-2 { animation: snow 15s linear infinite; opacity: 0.5; }
+        .snow-layer-3 { animation: snow 20s linear infinite; opacity: 0.3; }
 
-        .snow-layer-3 {
-            animation: snow 20s linear infinite;
-            opacity: 0.3;
-        }
-
-        /* Login Page */
+        /* Login */
         .login-container {
             display: flex;
             justify-content: center;
@@ -80,27 +67,8 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        .login-box h1 {
-            color: white;
-            font-size: 28px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .login-box h1::before {
-            content: '';
-        }
-
-        .login-box h1::after {
-            content: '';
-        }
-
-        .login-box p {
-            color: rgba(255, 255, 255, 0.6);
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
+        .login-box h1 { color: white; font-size: 28px; text-align: center; margin-bottom: 12px; }
+        .login-box p { color: rgba(255, 255, 255, 0.6); text-align: center; margin-bottom: 35px; }
         .login-box input {
             width: 100%;
             padding: 14px 16px;
@@ -125,9 +93,7 @@
             transition: transform 0.2s;
         }
 
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
+        .login-btn:hover { transform: translateY(-2px); }
 
         .error {
             background: rgba(239, 68, 68, 0.1);
@@ -143,12 +109,7 @@
         .error.show { display: block; }
 
         /* Dashboard */
-        .dashboard {
-            display: none;
-            position: relative;
-            z-index: 10;
-        }
-
+        .dashboard { display: none; position: relative; z-index: 10; }
         .dashboard.active { display: flex; }
 
         .sidebar {
@@ -185,21 +146,10 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .nav-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: white;
-        }
+        .nav-item:hover { background: rgba(102, 126, 234, 0.1); color: white; }
+        .nav-item.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
 
-        .nav-item.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 30px;
-            min-height: 100vh;
-        }
+        .main-content { margin-left: 250px; padding: 30px; min-height: 100vh; }
 
         .top-bar {
             display: flex;
@@ -245,12 +195,7 @@
             padding: 25px;
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
+        .stat-label { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-bottom: 10px; }
         .stat-value {
             font-size: 36px;
             font-weight: 700;
@@ -268,11 +213,7 @@
             margin-bottom: 20px;
         }
 
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
+        .card h2 { font-size: 20px; margin-bottom: 20px; }
         .card button {
             width: 100%;
             padding: 12px;
@@ -285,9 +226,7 @@
             transition: transform 0.2s;
         }
 
-        .card button:hover {
-            transform: translateY(-2px);
-        }
+        .card button:hover { transform: translateY(-2px); }
 
         .key-item {
             background: rgba(15, 20, 35, 0.8);
@@ -300,36 +239,10 @@
             align-items: center;
         }
 
-        .key-info {
-            flex: 1;
-        }
-
-        .key-info strong {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            user-select: none;
-            display: block;
-        }
-
-        .key-info strong:hover {
-            opacity: 0.8;
-        }
-
-        .key-line {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .key-text {
-            color: #667eea;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .key-info { flex: 1; }
+        .key-line { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .key-text { color: #667eea; font-size: 16px; font-weight: 700; cursor: pointer; }
+        .key-hidden { filter: blur(4px); }
 
         .copy-key-btn {
             padding: 4px 12px;
@@ -343,47 +256,22 @@
             transition: all 0.2s;
         }
 
-        .copy-key-btn:hover {
-            background: rgba(102, 126, 234, 0.4);
-            transform: scale(1.05);
-        }
+        .copy-key-btn:hover { background: rgba(102, 126, 234, 0.4); }
 
-        .key-hidden {
-            filter: blur(8px);
-            transition: filter 0.3s;
-        }
+        .key-info small { color: rgba(255, 255, 255, 0.5); font-size: 13px; }
 
-        .key-info small {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 13px;
-        }
-
-        .key-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .key-actions button {
-            padding: 8px 16px;
-            width: auto;
-            font-size: 13px;
-        }
-
+        .key-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .key-actions button { padding: 8px 16px; width: auto; font-size: 13px; }
         .delete-btn { background: #dc2626 !important; }
         .reset-btn { background: #f97316 !important; }
         .toggle-btn { background: #10b981 !important; }
         .blacklist-btn { background: #8b5cf6 !important; }
 
-        .page {
-            display: none;
-        }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        .page.active {
-            display: block;
-        }
-
-        .key-modal {
+        /* Modals */
+        .key-modal, .obfuscate-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -397,24 +285,30 @@
             z-index: 1000;
         }
 
-        .key-modal.show {
-            display: flex;
-        }
+        .key-modal.show, .obfuscate-modal.show { display: flex; }
 
-        .modal-content {
+        .modal-content, .obfuscate-content {
             background: rgba(20, 25, 40, 0.98);
             border: 2px solid rgba(102, 126, 234, 0.5);
             border-radius: 16px;
             padding: 40px;
-            max-width: 500px;
+            max-width: 600px;
+            width: 90%;
             text-align: center;
             position: relative;
         }
 
-        .modal-content h2 {
+        .modal-content h2, .obfuscate-content h2 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #667eea;
+        }
+
+        .obfuscate-content p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
         }
 
         .key-display {
@@ -438,68 +332,8 @@
             border-radius: 8px;
         }
 
-        .stat-row span:first-child {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .stat-row span:last-child {
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .close-modal {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* Obfuscation Modal */
-        .obfuscate-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .obfuscate-modal.show {
-            display: flex;
-        }
-
-        .obfuscate-content {
-            background: rgba(20, 25, 40, 0.98);
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-        }
-
-        .obfuscate-content h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .obfuscate-content p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            line-height: 1.6;
-            font-size: 14px;
-        }
+        .stat-row span:first-child { color: rgba(255, 255, 255, 0.6); }
+        .stat-row span:last-child { color: #667eea; font-weight: 600; }
 
         .input-row {
             margin-bottom: 15px;
@@ -525,11 +359,6 @@
             font-size: 14px;
         }
 
-        .input-row input:focus {
-            outline: none;
-            border-color: rgba(102, 126, 234, 0.6);
-        }
-
         .obfuscate-textarea {
             width: 100%;
             height: 300px;
@@ -544,12 +373,7 @@
             margin-bottom: 20px;
         }
 
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
+        .button-group { display: flex; gap: 15px; justify-content: center; }
         .btn-confirm {
             padding: 12px 30px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -558,11 +382,6 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-confirm:hover {
-            transform: translateY(-2px);
         }
 
         .btn-cancel {
@@ -573,22 +392,17 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        .btn-cancel:hover {
-            transform: translateY(-2px);
-        }
-
-        .copy-btn {
-            padding: 10px 25px;
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.5);
+        .close-modal, .copy-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
             border-radius: 8px;
             color: white;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
         }
 
         .success-message {
@@ -598,49 +412,80 @@
             display: none;
         }
 
-        .success-message.show {
-            display: block;
-        }
+        .success-message.show { display: block; }
     </style>
 </head>
 <body>
-    <!-- Snow Background -->
     <div class="snow-container">
         <div class="snow"></div>
         <div class="snow snow-layer-2"></div>
         <div class="snow snow-layer-3"></div>
     </div>
 
-    <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>Admin Panel</h1>
-            <p>Merry Christmas! 🎅 Enter your API key</p>
+            <h1>Quco Login</h1>
+            <p>Enter your API key to continue</p>
             <div class="error" id="errorMsg"></div>
             <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            <button class="login-btn" onclick="login()">🎁 Log in</button>
+            <button class="login-btn" onclick="login()">Log in</button>
         </div>
     </div>
 
-    <!-- Dashboard -->
+    <div class="key-modal" id="keyModal">
+        <div class="modal-content">
+            <h2>Key Generated Successfully</h2>
+            <div class="key-display" id="generatedKey">XXXXXXXXXXXX</div>
+            <div class="stat-row">
+                <span>Total Keys Generated:</span>
+                <span id="totalGenerated">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Created At:</span>
+                <span id="createdAt">-</span>
+            </div>
+            <button class="close-modal" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <div class="obfuscate-modal" id="obfuscateModal">
+        <div class="obfuscate-content">
+            <h2>Obfuscate Script</h2>
+            <p>Step 1: Convert your script to loadstring<br>Step 2: Paste it here to get obfuscated version</p>
+            
+            <div class="input-row">
+                <label>Your Script Loadstring</label>
+                <input type="text" id="loadstringInput" placeholder='loadstring(game:HttpGet("https://yourscript.lua"))()'>
+            </div>
+
+            <textarea class="obfuscate-textarea" id="scriptOutput" placeholder="Your obfuscated loadstring will appear here..." readonly></textarea>
+            
+            <div class="button-group">
+                <button class="btn-confirm" onclick="obfuscateScript()">Sure!</button>
+                <button class="btn-cancel" onclick="closeObfuscateModal()">Cancel</button>
+            </div>
+            <button class="copy-btn" id="copyBtn" style="display: none;" onclick="copyObfuscated()">Copy Obfuscated Code</button>
+            <div class="success-message" id="successMsg">Copied to clipboard!</div>
+        </div>
+    </div>
+
     <div class="dashboard" id="dashboard">
         <div class="sidebar">
-            <div class="logo">🎄 Quco Panel</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
-            <div class="nav-item" onclick="showPage('keys')">🔑 Key Management</div>
-            <div class="nav-item" onclick="showPage('generate')">➕ Generate Keys</div>
+            <div class="logo">Quco Panel</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="showPage('keys')">Key Management</div>
+            <div class="nav-item" onclick="showPage('generate')">Generate Keys</div>
+            <div class="nav-item" onclick="showPage('obfuscate')">Obfuscate</div>
         </div>
 
         <div class="main-content">
             <div class="top-bar">
-                <div class="welcome-badge">🎅 Merry Christmas, Admin!</div>
+                <div class="welcome-badge">Welcome back, Admin!</div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
-            <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">Dashboard</h1>
-                
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">API Status</div>
@@ -661,7 +506,6 @@
                 </div>
             </div>
 
-            <!-- Generate Page -->
             <div class="page" id="page-generate">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">Generate Keys</h1>
                 <div class="card">
@@ -670,7 +514,6 @@
                 </div>
             </div>
 
-            <!-- Keys Page -->
             <div class="page" id="page-keys">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">Key Management</h1>
                 <div class="card">
@@ -679,7 +522,6 @@
                 </div>
             </div>
 
-            <!-- Obfuscate Page -->
             <div class="page" id="page-obfuscate">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate</h1>
                 <div class="card">
@@ -761,18 +603,11 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
             const pageElement = document.getElementById('page-' + page);
-            if (pageElement) {
-                pageElement.classList.add('active');
-            }
+            if (pageElement) pageElement.classList.add('active');
             
-            // Highlight active nav item
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                if (item.textContent.toLowerCase().includes(page.toLowerCase()) || 
-                    (page === 'dashboard' && item.textContent.includes('Dashboard')) ||
-                    (page === 'keys' && item.textContent.includes('Key Management')) ||
-                    (page === 'generate' && item.textContent.includes('Generate')) ||
-                    (page === 'obfuscate' && item.textContent.includes('Obfuscate'))) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(page.toLowerCase())) {
                     item.classList.add('active');
                 }
             });
@@ -817,20 +652,17 @@
                 return;
             }
 
-            // Generate random loader ID (32 characters)
             const chars = 'abcdef0123456789';
             let loaderID = '';
             for (let i = 0; i < 32; i++) {
                 loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
             }
 
-            // Create obfuscated loadstring with custom domain
             const obfuscated = `loadstring(game:HttpGet("https://wowwww.net/files/v3/loaders/${loaderID}.lua"))()`;
             
             document.getElementById('scriptOutput').value = obfuscated;
             document.getElementById('copyBtn').style.display = 'inline-block';
             
-            // Store the mapping (in production, save this to database)
             console.log(`Loader ID: ${loaderID} -> Original URL: ${loadstringUrl}`);
         }
 
@@ -866,9 +698,7 @@
                     body: JSON.stringify({})
                 });
                 
-                if (!res.ok) {
-                    throw new Error('Failed to generate key');
-                }
+                if (!res.ok) throw new Error('Failed to generate key');
                 
                 const data = await res.json();
                 
@@ -938,55 +768,4 @@
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
-                            <button class="blacklist-btn" onclick="blacklistKey('${k.key}')">${k.blacklisted ? 'Unblacklist' : 'Blacklist'}</button>
-                            <button class="reset-btn" onclick="resetHWID('${k.key}')">Reset HWID</button>
-                            <button class="delete-btn" onclick="deleteKey('${k.key}')">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(div);
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function deleteKey(key) {
-            if (!confirm(`Delete key: ${key}?`)) return;
-            await fetch(`${API_URL}/admin/keys/${key}`, {
-                method: 'DELETE',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function toggleKey(key) {
-            await fetch(`${API_URL}/admin/keys/${key}/toggle`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function blacklistKey(key) {
-            await fetch(`${API_URL}/admin/keys/${key}/blacklist`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function resetHWID(key) {
-            if (!confirm(`Reset HWID for: ${key}?`)) return;
-            await fetch(`${API_URL}/admin/keys/${key}/reset-hwid`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') login();
-        });
-    </script>
-</body>
-</html>
+                            <button class="blacklist-btn" onclick="blacklistKey('${
