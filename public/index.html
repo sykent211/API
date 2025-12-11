@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Control Panel - Christmas Edition 🎄</title>
+    <title>Quco</title>
     <style>
         * {
             margin: 0;
@@ -88,11 +88,11 @@
         }
 
         .login-box h1::before {
-            content: '🎄 ';
+            content: '';
         }
 
         .login-box h1::after {
-            content: ' 🎄';
+            content: '';
         }
 
         .login-box p {
@@ -601,16 +601,25 @@
                     },
                     body: JSON.stringify({})
                 });
+                
+                if (!res.ok) {
+                    throw new Error('Failed to generate key');
+                }
+                
                 const data = await res.json();
+                
                 if (data.success) {
                     document.getElementById('generatedKey').textContent = data.key;
                     document.getElementById('totalGenerated').textContent = data.totalGenerated;
                     document.getElementById('createdAt').textContent = new Date().toLocaleString();
                     document.getElementById('keyModal').classList.add('show');
                     loadKeys();
+                } else {
+                    alert('Failed to generate key: ' + (data.message || 'Unknown error'));
                 }
             } catch (err) {
-                alert('Failed to generate key');
+                console.error('Generation error:', err);
+                alert('Failed to generate key: ' + err.message);
             }
         }
 
