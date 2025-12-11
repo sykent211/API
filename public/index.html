@@ -768,4 +768,55 @@
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
-                            <button class="blacklist-btn" onclick="blacklistKey('${
+                            <button class="blacklist-btn" onclick="blacklistKey('${k.key}')">${k.blacklisted ? 'Unblacklist' : 'Blacklist'}</button>
+                            <button class="reset-btn" onclick="resetHWID('${k.key}')">Reset HWID</button>
+                            <button class="delete-btn" onclick="deleteKey('${k.key}')">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteKey(key) {
+            if (!confirm(`Delete key: ${key}?`)) return;
+            await fetch(`${API_URL}/admin/keys/${key}`, {
+                method: 'DELETE',
+                headers: { 'Admin-Key': adminKey }
+            });
+            loadKeys();
+        }
+
+        async function toggleKey(key) {
+            await fetch(`${API_URL}/admin/keys/${key}/toggle`, {
+                method: 'POST',
+                headers: { 'Admin-Key': adminKey }
+            });
+            loadKeys();
+        }
+
+        async function blacklistKey(key) {
+            await fetch(`${API_URL}/admin/keys/${key}/blacklist`, {
+                method: 'POST',
+                headers: { 'Admin-Key': adminKey }
+            });
+            loadKeys();
+        }
+
+        async function resetHWID(key) {
+            if (!confirm(`Reset HWID for: ${key}?`)) return;
+            await fetch(`${API_URL}/admin/keys/${key}/reset-hwid`, {
+                method: 'POST',
+                headers: { 'Admin-Key': adminKey }
+            });
+            loadKeys();
+        }
+
+        document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>
