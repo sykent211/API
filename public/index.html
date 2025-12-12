@@ -3,833 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Panel</title>
+    <title>QUCO - Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #1a1f35 0%, #0f1419 100%);
-            color: white;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Snow Background */
-        .snow-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .snow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, white, transparent),
-                radial-gradient(2px 2px at 40px 70px, white, transparent),
-                radial-gradient(1px 1px at 50px 50px, white, transparent);
-            background-size: 200px 200px;
-            animation: snow 10s linear infinite;
-        }
-
-        @keyframes snow {
-            0% { background-position: 0px 0px, 0px 0px, 0px 0px; }
-            100% { background-position: 500px 1000px, 400px 400px, 300px 300px; }
-        }
-
-        .snow-layer-2 { animation: snow 15s linear infinite; opacity: 0.5; }
-        .snow-layer-3 { animation: snow 20s linear infinite; opacity: 0.3; }
-
-        /* Login */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
             min-height: 100vh;
-            position: relative;
-            z-index: 10;
         }
-
-        .login-box {
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 50px 45px;
-            width: 480px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        
+        /* Header */
+        .header {
+            background: #0a0a0a;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #fff;
         }
-
-        .login-box h1 { color: white; font-size: 28px; text-align: center; margin-bottom: 12px; }
-        .login-box p { color: rgba(255, 255, 255, 0.6); text-align: center; margin-bottom: 35px; }
-        .login-box input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            font-size: 15px;
-            margin-bottom: 25px;
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .login-btn:hover { transform: translateY(-2px); }
-
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-
-        .error.show { display: block; }
-
-        /* Dashboard */
-        .dashboard { display: none; position: relative; z-index: 10; }
-        .dashboard.active { display: flex; }
-
-        .sidebar {
-            width: 250px;
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(10px);
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding: 20px;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        
         .logo {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .welcome {
+            color: #fff;
+        }
+        
+        .settings-btn, .logout-btn {
+            padding: 10px 20px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .settings-btn {
+            background: transparent;
+            color: #fff;
+            font-size: 20px;
+        }
+        
+        .logout-btn {
+            background: #fff;
+            color: #000;
+        }
+        
+        .logout-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: #0a0a0a;
+            padding: 0 40px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #fff;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-btn.active {
+            background: #fff;
+            color: #000;
+        }
+        
+        .nav-btn:hover:not(.active) {
+            background: #1a1a1a;
+        }
+        
+        /* Main Content */
+        .container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .divider {
+            height: 3px;
+            background: #fff;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-text {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .info-card {
+            background: #0a0a0a;
+            padding: 20px 30px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .info-label {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            color: #fff;
+        }
+        
+        /* Changelog */
+        .changelog {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+        }
+        
+        .changelog-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
         }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 10px;
+        
+        .changelog-icon {
+            font-size: 20px;
+        }
+        
+        .changelog-item {
+            border-left: 3px solid #fff;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .changelog-date {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .changelog-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .changelog-desc {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        /* Download Page */
+        .download-section {
+            display: none;
+        }
+        
+        .download-section.active {
+            display: block;
+        }
+        
+        .download-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 30px;
+            max-width: 500px;
+        }
+        
+        .download-card {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            text-align: center;
+        }
+        
+        .download-card h3 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .download-btn {
+            padding: 15px 40px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
         }
-
-        .nav-item:hover { background: rgba(102, 126, 234, 0.1); color: white; }
-        .nav-item.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-
-        .main-content { margin-left: 250px; padding: 30px; min-height: 100vh; }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .welcome-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .logout-btn {
-            padding: 10px 20px;
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 25px;
-        }
-
-        .stat-label { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-bottom: 10px; }
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .card {
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .card h2 { font-size: 20px; margin-bottom: 20px; }
-        .card button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .card button:hover { transform: translateY(-2px); }
-
-        .key-item {
-            background: rgba(15, 20, 35, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .key-info { flex: 1; }
-        .key-line { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .key-text { color: #667eea; font-size: 16px; font-weight: 700; cursor: pointer; }
-        .key-hidden { filter: blur(4px); }
-
-        .copy-key-btn {
-            padding: 4px 12px;
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.5);
-            border-radius: 6px;
-            color: #667eea;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-key-btn:hover { background: rgba(102, 126, 234, 0.4); }
-
-        .key-info small { color: rgba(255, 255, 255, 0.5); font-size: 13px; }
-
-        .key-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .key-actions button { padding: 8px 16px; width: auto; font-size: 13px; }
-        .delete-btn { background: #dc2626 !important; }
-        .reset-btn { background: #f97316 !important; }
-        .toggle-btn { background: #10b981 !important; }
-        .blacklist-btn { background: #8b5cf6 !important; }
-
-        .page { display: none; }
-        .page.active { display: block; }
-
-        /* Modals */
-        .key-modal, .obfuscate-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .key-modal.show, .obfuscate-modal.show { display: flex; }
-
-        .modal-content, .obfuscate-content {
-            background: rgba(20, 25, 40, 0.98);
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-content h2, .obfuscate-content h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .obfuscate-content p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .key-display {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
+        
+        .download-btn:hover {
+            background: #000;
             color: #fff;
-            margin: 20px 0;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            word-break: break-all;
+            border: 2px solid #fff;
         }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
+        
+        /* Support Page */
+        .support-form {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            max-width: 600px;
         }
-
-        .stat-row span:first-child { color: rgba(255, 255, 255, 0.6); }
-        .stat-row span:last-child { color: #667eea; font-weight: 600; }
-
-        .input-row {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-row label {
-            display: block;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .input-row input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-        }
-
-        .obfuscate-textarea {
-            width: 100%;
-            height: 300px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            resize: vertical;
+        
+        .form-group {
             margin-bottom: 20px;
         }
-
-        .button-group { display: flex; gap: 15px; justify-content: center; }
-        .btn-confirm {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #fff;
             font-weight: 600;
-            cursor: pointer;
         }
-
-        .btn-cancel {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .close-modal, .copy-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .success-message {
-            color: #10b981;
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 2px solid #fff;
+            color: #fff;
+            border-radius: 5px;
             font-size: 14px;
-            margin-top: 10px;
-            display: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+            min-height: 150px;
         }
-
-        .success-message.show { display: block; }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #888;
+        }
+        
+        .submit-btn {
+            padding: 15px 40px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .submit-btn:hover {
+            background: #000;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+        
+        .success-message {
+            background: #fff;
+            color: #000;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            font-weight: 600;
+        }
+        
+        .discord-embed {
+            background: #0a0a0a;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .embed-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .embed-desc {
+            color: #ccc;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
-    <div class="snow-container">
-        <div class="snow"></div>
-        <div class="snow snow-layer-2"></div>
-        <div class="snow snow-layer-3"></div>
-    </div>
-
-    <div class="login-container" id="loginContainer">
-        <div class="login-box">
-            <h1>Quco Login</h1>
-            <p>Enter your API key to continue</p>
-            <div class="error" id="errorMsg"></div>
-            <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            <button class="login-btn" onclick="login()">Log in</button>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">QUCO</div>
+        </div>
+        <div class="header-right">
+            <span class="welcome">Welcome, <span id="username">User</span></span>
+            <button class="settings-btn">⚙</button>
+            <button class="logout-btn">LOGOUT</button>
         </div>
     </div>
-
-    <div class="key-modal" id="keyModal">
-        <div class="modal-content">
-            <h2>Key Generated Successfully</h2>
-            <div class="key-display" id="generatedKey">XXXXXXXXXXXX</div>
-            <div class="stat-row">
-                <span>Total Keys Generated:</span>
-                <span id="totalGenerated">0</span>
-            </div>
-            <div class="stat-row">
-                <span>Created At:</span>
-                <span id="createdAt">-</span>
-            </div>
-            <button class="close-modal" onclick="closeModal()">Close</button>
-        </div>
+    
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-btn active" onclick="showPage('home')">HOME</button>
+        <button class="nav-btn" onclick="showPage('download')">DOWNLOAD</button>
+        <button class="nav-btn" onclick="showPage('support')">SUPPORT</button>
     </div>
-
-    <div class="obfuscate-modal" id="obfuscateModal">
-        <div class="obfuscate-content">
-            <h2>Obfuscate Script</h2>
-            <p>Step 1: Convert your script to loadstring<br>Step 2: Paste it here to get obfuscated version</p>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Page -->
+        <div id="homePage">
+            <div class="divider"></div>
             
-            <div class="input-row">
-                <label>Your Script Loadstring</label>
-                <input type="text" id="loadstringInput" placeholder='loadstring(game:HttpGet("https://yourscript.lua"))()'>
-            </div>
-
-            <textarea class="obfuscate-textarea" id="scriptOutput" placeholder="Your obfuscated loadstring will appear here..." readonly></textarea>
+            <h1 class="dashboard-title">Dashboard Home</h1>
+            <p class="welcome-text">Welcome to Quco</p>
             
-            <div class="button-group">
-                <button class="btn-confirm" onclick="obfuscateScript()">Sure!</button>
-                <button class="btn-cancel" onclick="closeObfuscateModal()">Cancel</button>
-            </div>
-            <button class="copy-btn" id="copyBtn" style="display: none;" onclick="copyObfuscated()">Copy Obfuscated Code</button>
-            <div class="success-message" id="successMsg">Copied to clipboard!</div>
-        </div>
-    </div>
-
-    <div class="dashboard" id="dashboard">
-        <div class="sidebar">
-            <div class="logo">Quco Panel</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
-            <div class="nav-item" onclick="showPage('keys')">Key Management</div>
-            <div class="nav-item" onclick="showPage('generate')">Generate Keys</div>
-            <div class="nav-item" onclick="showPage('obfuscate')">Obfuscate</div>
-        </div>
-
-        <div class="main-content">
-            <div class="top-bar">
-                <div class="welcome-badge">Welcome back, Admin!</div>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-
-            <div class="page active" id="page-dashboard">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Dashboard</h1>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">API Status</div>
-                        <div class="stat-value" id="apiStatus">Active</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Keys</div>
-                        <div class="stat-value" id="totalKeys">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Active Keys</div>
-                        <div class="stat-value" id="activeKeys">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Executions</div>
-                        <div class="stat-value" id="totalExecs">0</div>
-                    </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-label">UID:</span>
+                    <span class="info-value">3</span>
                 </div>
-            </div>
-
-            <div class="page" id="page-generate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Generate Keys</h1>
-                <div class="card">
-                    <h2>Create New Key</h2>
-                    <button onclick="generateKey()">Generate Key</button>
-                </div>
-            </div>
-
-            <div class="page" id="page-keys">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Key Management</h1>
-                <div class="card">
-                    <h2>Active Keys (<span id="keyCount">0</span>)</h2>
-                    <div id="keysList"></div>
-                </div>
-            </div>
-
-            <div class="page" id="page-obfuscate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate</h1>
-                <div class="card">
-                    <h2>Script Obfuscation</h2>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">
-                        Step 1: Convert your script to loadstring<br>
-                        Step 2: Paste it here to get obfuscated version
-                    </p>
-                    <button onclick="openObfuscateModal()">Obfuscate Script</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let adminKey = localStorage.getItem('quco_admin_key') || '';
-        const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
-
-        if (adminKey) verifyAndLogin();
-
-        function showError(msg) {
-            const el = document.getElementById('errorMsg');
-            el.textContent = msg;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 3000);
-        }
-
-        async function login() {
-            const key = document.getElementById('apiKey').value.trim();
-            if (!key) return showError('Please enter an API key');
-
-            try {
-                const res = await fetch(`${API_URL}/admin/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ adminKey: key })
-                });
-                const data = await res.json();
                 
-                if (data.success) {
-                    adminKey = key;
-                    localStorage.setItem('quco_admin_key', key);
-                    document.getElementById('loginContainer').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    loadDashboard();
-                } else {
-                    showError('Invalid API key');
-                }
-            } catch (err) {
-                showError('Connection error');
-            }
-        }
-
-        async function verifyAndLogin() {
-            try {
-                const res = await fetch(`${API_URL}/admin/keys`, {
-                    headers: { 'Admin-Key': adminKey }
-                });
-                if (res.ok) {
-                    document.getElementById('loginContainer').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    loadDashboard();
-                } else {
-                    localStorage.removeItem('quco_admin_key');
-                    adminKey = '';
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('quco_admin_key');
-            location.reload();
-        }
-
+                <div class="info-card">
+                    <span class="info-label">License Key:</span>
+                    <span class="info-value">AL******</span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="info-label">HWID:</span>
+                    <span class="info-value">Unknown</span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value">Active</span>
+                </div>
+            </div>
+            
+            <!-- Changelog -->
+            <div class="changelog">
+                <div class="changelog-header">
+                    <span class="changelog-icon">📄</span>
+                    <span>Changelog</span>
+                </div>
+                
+                <div class="changelog-item">
+                    <div class="changelog-date">12/2/2025</div>
+                    <div class="changelog-title">Updated Quco Script</div>
+                    <div class="changelog-desc">Fixed Blanking, Fixed Toggle Speed, Removed Distance Check.</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Download Page -->
+        <div id="downloadPage" class="download-section">
+            <div class="divider"></div>
+            <h1 class="dashboard-title">Downloads</h1>
+            <p class="welcome-text">Download Quco Injector</p>
+            
+            <div class="download-grid">
+                <div class="download-card">
+                    <h3>Quco Injector</h3>
+                    <button class="download-btn" onclick="downloadFile()">Download</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support Page -->
+        <div id="supportPage" class="download-section">
+            <div class="divider"></div>
+            <h1 class="dashboard-title">Support</h1>
+            <p class="welcome-text">Need help? Submit your issue</p>
+            
+            <div class="discord-embed">
+                <div class="embed-title">📩 Contact Support</div>
+                <div class="embed-desc">
+                    Having issues? Fill out the form below and our team will get back to you as soon as possible. 
+                    Please describe your issue in detail.
+                </div>
+            </div>
+            
+            <div class="support-form">
+                <div class="form-group">
+                    <label>What's the issue?</label>
+                    <textarea id="issueInput" placeholder="Describe your issue here..."></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="submitIssue()">Confirm</button>
+                
+                <div id="successMessage" class="success-message">
+                    ✓ Issue submitted successfully! We'll get back to you soon.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get username from login
+        const username = sessionStorage.getItem('quco_username') || 'User';
+        document.getElementById('username').textContent = username;
+        
         function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('downloadPage').classList.remove('active');
+            document.getElementById('supportPage').classList.remove('active');
             
-            const pageElement = document.getElementById('page-' + page);
-            if (pageElement) pageElement.classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(page.toLowerCase())) {
-                    item.classList.add('active');
-                }
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
             
-            if (page === 'keys') loadKeys();
-        }
-
-        async function loadDashboard() {
-            loadKeys();
-            checkApiStatus();
-        }
-
-        async function checkApiStatus() {
-            try {
-                await fetch(`${API_URL}/api`);
-                document.getElementById('apiStatus').textContent = 'Active';
-            } catch {
-                document.getElementById('apiStatus').textContent = 'Offline';
+            if (page === 'home') {
+                document.getElementById('homePage').style.display = 'block';
+                document.querySelectorAll('.nav-btn')[0].classList.add('active');
+            } else if (page === 'download') {
+                document.getElementById('downloadPage').classList.add('active');
+                document.querySelectorAll('.nav-btn')[1].classList.add('active');
+            } else if (page === 'support') {
+                document.getElementById('supportPage').classList.add('active');
+                document.querySelectorAll('.nav-btn')[2].classList.add('active');
             }
         }
-
-        function closeModal() {
-            document.getElementById('keyModal').classList.remove('show');
+        
+        function downloadFile() {
+            alert('Download starting - Connect this to your actual file');
         }
-
-        function openObfuscateModal() {
-            document.getElementById('obfuscateModal').classList.add('show');
-            document.getElementById('loadstringInput').value = '';
-            document.getElementById('scriptOutput').value = '';
-            document.getElementById('copyBtn').style.display = 'none';
-        }
-
-        function closeObfuscateModal() {
-            document.getElementById('obfuscateModal').classList.remove('show');
-        }
-
-        function obfuscateScript() {
-            const loadstringUrl = document.getElementById('loadstringInput').value.trim();
+        
+        async function submitIssue() {
+            const issue = document.getElementById('issueInput').value;
             
-            if (!loadstringUrl) {
-                alert('Please enter a loadstring URL!');
+            if (!issue.trim()) {
+                alert('Please describe your issue');
                 return;
             }
-
-            // Show loading
-            document.getElementById('scriptOutput').value = 'Generating obfuscated loader...';
-
-            // Call backend to create obfuscated loader
-            fetch(`${API_URL}/admin/obfuscate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Admin-Key': adminKey
-                },
-                body: JSON.stringify({ scriptUrl: loadstringUrl })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('scriptOutput').value = data.obfuscatedUrl;
-                    document.getElementById('copyBtn').style.display = 'inline-block';
-                } else {
-                    alert('Failed to obfuscate: ' + data.message);
-                    document.getElementById('scriptOutput').value = '';
-                }
-            })
-            .catch(err => {
-                alert('Error: ' + err.message);
-                document.getElementById('scriptOutput').value = '';
-            });
-        }
-
-        function copyObfuscated() {
-            const textarea = document.getElementById('scriptOutput');
-            textarea.select();
-            document.execCommand('copy');
             
-            const msg = document.getElementById('successMsg');
-            msg.classList.add('show');
-            setTimeout(() => msg.classList.remove('show'), 2000);
-        }
-
-        function copyKey(key) {
-            const textarea = document.createElement('textarea');
-            textarea.value = key;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+            const webhookURL = 'https://ptb.discord.com/api/webhooks/1449028210871242865/b-PBKait-JkVrqyQ25nmalk9U2s2W_WEiuVKyK99KUqfykV7Gm59A6pyjabppYB6xI2D';
             
-            alert('Key copied to clipboard!');
-        }
-
-        async function generateKey() {
+            const payload = {
+                content: `**New Support Ticket from ${username}**\n\n${issue}`
+            };
+            
             try {
-                const res = await fetch(`${API_URL}/admin/generate`, {
+                const response = await fetch(webhookURL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Admin-Key': adminKey
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({})
+                    body: JSON.stringify(payload)
                 });
                 
-                if (!res.ok) throw new Error('Failed to generate key');
-                
-                const data = await res.json();
-                
-                if (data.success) {
-                    const keyElement = document.getElementById('generatedKey');
-                    const totalElement = document.getElementById('totalGenerated');
-                    const timeElement = document.getElementById('createdAt');
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('issueInput').value = '';
                     
-                    if (keyElement) keyElement.textContent = data.key;
-                    if (totalElement) totalElement.textContent = data.totalGenerated;
-                    if (timeElement) timeElement.textContent = new Date().toLocaleString();
-                    
-                    const modal = document.getElementById('keyModal');
-                    if (modal) modal.classList.add('show');
-                    
-                    loadKeys();
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 3000);
                 } else {
-                    alert('Failed to generate key: ' + (data.message || 'Unknown error'));
+                    alert('Failed to submit issue. Please try again.');
                 }
-            } catch (err) {
-                console.error('Generation error:', err);
-                alert('Failed to generate key: ' + err.message);
+            } catch (error) {
+                alert('Error submitting issue. Please try again.');
+                console.error(error);
             }
         }
-
-        function toggleKeyVisibility(element, key) {
-            if (element.classList.contains('key-hidden')) {
-                element.classList.remove('key-hidden');
-                element.textContent = `License Key: ${key}`;
-            } else {
-                element.classList.add('key-hidden');
-                const maskedKey = `${key.substring(0, 2)}${'*'.repeat(8)}${key.substring(10)}`;
-                element.textContent = `License Key: ${maskedKey}`;
+        
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('quco_username');
+                window.location.href = 'index.html';
             }
-        }
-
-        async function loadKeys() {
-            try {
-                const res = await fetch(`${API_URL}/admin/keys`, {
-                    headers: { 'Admin-Key': adminKey }
-                });
-                const data = await res.json();
-
-                const totalExecs = data.keys.reduce((sum, k) => sum + (k.executions || 0), 0);
-
-                document.getElementById('totalKeys').textContent = data.keys.length;
-                document.getElementById('activeKeys').textContent = data.keys.filter(k => k.active && !k.blacklisted).length;
-                document.getElementById('totalExecs').textContent = totalExecs;
-                document.getElementById('keyCount').textContent = data.keys.length;
-
-                const list = document.getElementById('keysList');
-                list.innerHTML = '';
-
-                data.keys.forEach(k => {
-                    const div = document.createElement('div');
-                    div.className = 'key-item';
-                    const hwidDisplay = k.hwid ? k.hwid.substring(0, 12) + '...' : '-';
-                    const maskedKey = `${k.key.substring(0, 2)}${'*'.repeat(8)}${k.key.substring(10)}`;
-                    const statusText = k.blacklisted ? 'Blacklisted' : '';
-                    div.innerHTML = `
-                        <div class="key-info">
-                            <div class="key-line">
-                                <span class="key-text key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</span>
-                                <button class="copy-key-btn" onclick="copyKey('${k.key}')">Copy</button>
-                            </div>
-                            <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
-                        </div>
-                        <div class="key-actions">
-                            <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
-                            <button class="blacklist-btn" onclick="blacklistKey('${k.key}')">${k.blacklisted ? 'Unblacklist' : 'Blacklist'}</button>
-                            <button class="reset-btn" onclick="resetHWID('${k.key}')">Reset HWID</button>
-                            <button class="delete-btn" onclick="deleteKey('${k.key}')">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(div);
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function deleteKey(key) {
-            if (!confirm(`Delete key: ${key}?`)) return;
-            await fetch(`${API_URL}/admin/keys/${key}`, {
-                method: 'DELETE',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function toggleKey(key) {
-            await fetch(`${API_URL}/admin/keys/${key}/toggle`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function blacklistKey(key) {
-            await fetch(`${API_URL}/admin/keys/${key}/blacklist`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        async function resetHWID(key) {
-            if (!confirm(`Reset HWID for: ${key}?`)) return;
-            await fetch(`${API_URL}/admin/keys/${key}/reset-hwid`, {
-                method: 'POST',
-                headers: { 'Admin-Key': adminKey }
-            });
-            loadKeys();
-        }
-
-        document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') login();
         });
     </script>
 </body>
