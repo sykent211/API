@@ -309,7 +309,7 @@ app.post('/admin/obfuscate', requireAdmin, (req, res) => {
         res.json({ 
             success: true, 
             loaderID: loaderID,
-            obfuscatedUrl: `loadstring(game:HttpGet("https://quco-panel-production-de6a.up.railway.app/files/v3/loaders/${loaderID}.lua"))()`
+            obfuscatedUrl: `loadstring(game:HttpGet("https://wowwww.net/files/v3/loaders/${loaderID}.lua"))()`
         });
     } else {
         res.status(500).json({ success: false, message: "Failed to save loader" });
@@ -317,8 +317,10 @@ app.post('/admin/obfuscate', requireAdmin, (req, res) => {
 });
 
 // Serve obfuscated loader
-app.get('/files/v3/loaders/:loaderID.lua', (req, res) => {
-    const loaderID = req.params.loaderID;
+app.get('/files/v3/loaders/:loaderID', (req, res) => {
+    // Remove .lua extension if present
+    let loaderID = req.params.loaderID.replace('.lua', '');
+    
     const loaders = loadLoaders();
     
     if (!loaders[loaderID]) {
