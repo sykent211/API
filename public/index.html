@@ -13,9 +13,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000000;
+            background: #000;
             color: white;
-            overflow-x: hidden;
         }
 
         .login-container {
@@ -34,7 +33,6 @@
         }
 
         .login-box h1 {
-            color: white;
             font-size: 24px;
             text-align: center;
             margin-bottom: 10px;
@@ -67,10 +65,6 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        .login-btn:hover {
-            background: #ddd;
         }
 
         .error {
@@ -120,7 +114,6 @@
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 30px;
-            color: white;
         }
 
         .nav-item {
@@ -128,7 +121,6 @@
             margin-bottom: 5px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
             color: #888;
         }
 
@@ -178,10 +170,6 @@
             font-weight: 600;
         }
 
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
-        }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -205,7 +193,6 @@
         .stat-value {
             font-size: 32px;
             font-weight: 700;
-            color: white;
         }
 
         .card {
@@ -219,7 +206,6 @@
         .card h2 {
             font-size: 18px;
             margin-bottom: 20px;
-            color: white;
         }
 
         .card input, .card textarea {
@@ -249,24 +235,15 @@
             cursor: pointer;
         }
 
-        .card button:hover {
-            background: #ddd;
-        }
-
         .key-item {
             background: #222;
             border: 1px solid #444;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
         .key-info strong {
-            color: white;
             font-size: 15px;
             display: block;
             margin-bottom: 8px;
@@ -281,6 +258,7 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 15px;
         }
 
         .key-actions button {
@@ -317,7 +295,7 @@
             <h1>Admin Panel</h1>
             <p>Enter your admin API key</p>
             <div class="error" id="errorMsg"></div>
-            <input type="password" id="apiKey" placeholder="Enter your admin API key">
+            <input type="password" id="apiKey" placeholder="Enter your admin API key" autocomplete="off">
             <button class="login-btn" onclick="login()">Log in</button>
         </div>
     </div>
@@ -343,7 +321,7 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">API Status</div>
-                        <div class="stat-value" id="apiStatus">Online</div>
+                        <div class="stat-value" id="apiStatus">Loading...</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Keys</div>
@@ -396,7 +374,7 @@
 
     <script>
         let adminKey = '';
-        const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
+        let API_URL = window.location.origin;
 
         function showError(msg) {
             const el = document.getElementById('errorMsg');
@@ -422,6 +400,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ adminKey: key })
                 });
+                
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
                 const data = await res.json();
                 
                 if (data.success) {
@@ -433,7 +416,8 @@
                     showError('Invalid API key');
                 }
             } catch (err) {
-                showError('Connection error');
+                console.error('Login error:', err);
+                showError('Connection error - Check console');
             }
         }
 
@@ -458,8 +442,9 @@
 
         async function checkApiStatus() {
             try {
-                await fetch(`${API_URL}/api`);
-                document.getElementById('apiStatus').textContent = 'Online';
+                const res = await fetch(`${API_URL}/api`);
+                const data = await res.json();
+                document.getElementById('apiStatus').textContent = data.success ? 'Online' : 'Offline';
             } catch {
                 document.getElementById('apiStatus').textContent = 'Offline';
             }
@@ -482,6 +467,8 @@
                     alert(`Key Generated!\n\n${data.key}\n\nCopy this key now!`);
                     document.getElementById('prefix').value = '';
                     loadKeys();
+                } else {
+                    alert('Failed: ' + data.message);
                 }
             } catch (err) {
                 alert('Failed to generate key');
@@ -504,6 +491,11 @@
 
                 const list = document.getElementById('keysList');
                 list.innerHTML = '';
+
+                if (data.keys.length === 0) {
+                    list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No keys generated yet</p>';
+                    return;
+                }
 
                 data.keys.forEach(k => {
                     const div = document.createElement('div');
@@ -604,7 +596,7 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    showSuccess('Panel settings saved successfully! Changes will reflect in Discord bot.');
+                    showSuccess('Panel settings saved successfully!');
                 } else {
                     alert('Failed to save settings');
                 }
