@@ -19,6 +19,7 @@
             position: relative;
         }
 
+        /* Falling Snow */
         .snowflake {
             position: fixed;
             top: -10px;
@@ -44,6 +45,7 @@
             }
         }
 
+        /* Christmas Decorations */
         .christmas-lights {
             position: fixed;
             top: 0;
@@ -74,6 +76,7 @@
             50% { opacity: 0.3; }
         }
 
+        /* Login Page */
         .login-container {
             display: flex;
             justify-content: center;
@@ -150,6 +153,20 @@
 
         .error.show { display: block; }
 
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success.show { display: block; }
+
+        /* Dashboard */
         .dashboard {
             display: none;
             position: relative;
@@ -290,26 +307,22 @@
             color: white;
             margin-bottom: 15px;
             font-family: inherit;
-            resize: vertical;
         }
 
         .card textarea {
+            resize: vertical;
             min-height: 100px;
         }
 
         .card button {
-            padding: 12px 24px;
+            width: 100%;
+            padding: 12px;
             background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .btn-secondary {
-            background: rgba(107, 114, 128, 0.5) !important;
         }
 
         .key-item {
@@ -343,8 +356,8 @@
 
         .key-actions button {
             padding: 8px 16px;
+            width: auto;
             font-size: 13px;
-            margin: 0;
         }
 
         .delete-btn { background: #dc2626 !important; }
@@ -359,26 +372,10 @@
         .page.active {
             display: block;
         }
-
-        .customize-preview {
-            background: rgba(15, 15, 15, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .customize-preview h3 {
-            color: #ffd700;
-            margin-bottom: 10px;
-        }
-
-        .customize-preview p {
-            color: rgba(255, 255, 255, 0.7);
-        }
     </style>
 </head>
 <body>
+    <!-- Christmas Lights -->
     <div class="christmas-lights">
         <div class="light"></div>
         <div class="light"></div>
@@ -387,6 +384,7 @@
         <div class="light"></div>
     </div>
 
+    <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
             <h1>Admin Panel</h1>
@@ -397,13 +395,14 @@
         </div>
     </div>
 
+    <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
         <div class="sidebar">
             <div class="logo">🎄 Quco Panel</div>
             <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
             <div class="nav-item" onclick="showPage('keys')">🔑 Key Management</div>
             <div class="nav-item" onclick="showPage('generate')">➕ Generate Keys</div>
-            <div class="nav-item" onclick="showPage('control')">⚙️ Control</div>
+            <div class="nav-item" onclick="showPage('settings')">⚙️ Panel Settings</div>
         </div>
 
         <div class="main-content">
@@ -412,6 +411,7 @@
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
+            <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">🎄 Dashboard</h1>
                 
@@ -435,6 +435,7 @@
                 </div>
             </div>
 
+            <!-- Generate Page -->
             <div class="page" id="page-generate">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
                 <div class="card">
@@ -444,6 +445,7 @@
                 </div>
             </div>
 
+            <!-- Keys Page -->
             <div class="page" id="page-keys">
                 <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
                 <div class="card">
@@ -452,41 +454,26 @@
                 </div>
             </div>
 
-            <div class="page" id="page-control">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">⚙️ Control Panel</h1>
+            <!-- Settings Page -->
+            <div class="page" id="page-settings">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">⚙️ Panel Settings</h1>
                 <div class="card">
-                    <h2>🎨 Customize Panel</h2>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">Customize the appearance and text of your Discord panel embed</p>
+                    <h2>🎮 Discord Bot Panel Configuration</h2>
+                    <div class="success" id="settingsSuccess"></div>
+                    <label style="color: rgba(255, 255, 255, 0.7); display: block; margin-bottom: 8px; font-size: 14px;">Panel Name</label>
+                    <input type="text" id="panelName" placeholder="Quco Key System">
                     
-                    <label style="display: block; margin-bottom: 8px; color: rgba(255, 255, 255, 0.8);">Panel Name</label>
-                    <input type="text" id="panelName" placeholder="Enter panel name" value="Quco Key System">
+                    <label style="color: rgba(255, 255, 255, 0.7); display: block; margin-bottom: 8px; font-size: 14px;">Panel Description</label>
+                    <textarea id="panelDescription" placeholder="Click the buttons below to interact with the key system"></textarea>
                     
-                    <label style="display: block; margin-bottom: 8px; color: rgba(255, 255, 255, 0.8);">Panel Description</label>
-                    <textarea id="panelDescription" placeholder="Enter panel description">Click the buttons below to interact with the key system</textarea>
-                    
-                    <div class="customize-preview">
-                        <h3 id="previewName">Quco Key System</h3>
-                        <p id="previewDescription">Click the buttons below to interact with the key system</p>
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        <button onclick="saveCustomization()">💾 Save</button>
-                        <button class="btn-secondary" onclick="cancelCustomization()">❌ Cancel</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>📊 Current Settings</h2>
-                    <div style="background: rgba(15, 15, 15, 0.8); padding: 15px; border-radius: 8px;">
-                        <p style="margin-bottom: 10px;"><strong>Name:</strong> <span id="currentName">Quco Key System</span></p>
-                        <p><strong>Description:</strong> <span id="currentDescription">Click the buttons below to interact with the key system</span></p>
-                    </div>
+                    <button onclick="savePanelSettings()">💾 Save Settings</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Create falling snowflakes
         function createSnowflakes() {
             const snowflakes = ['❄', '❅', '❆'];
             setInterval(() => {
@@ -503,24 +490,20 @@
         }
         createSnowflakes();
 
-        let adminKey = localStorage.getItem('quco_admin_key') || '';
+        let adminKey = '';
         const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
-
-        // Panel customization storage
-        let panelConfig = JSON.parse(localStorage.getItem('quco_panel_config')) || {
-            name: 'Quco Key System',
-            description: 'Click the buttons below to interact with the key system'
-        };
-
-        // Load saved customization on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCustomization();
-        });
 
         if (adminKey) verifyAndLogin();
 
         function showError(msg) {
             const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('settingsSuccess');
             el.textContent = msg;
             el.classList.add('show');
             setTimeout(() => el.classList.remove('show'), 3000);
@@ -540,11 +523,9 @@
                 
                 if (data.success) {
                     adminKey = key;
-                    localStorage.setItem('quco_admin_key', key);
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     loadDashboard();
-                    loadCustomization();
                 } else {
                     showError('Invalid API key');
                 }
@@ -562,9 +543,7 @@
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     loadDashboard();
-                    loadCustomization();
                 } else {
-                    localStorage.removeItem('quco_admin_key');
                     adminKey = '';
                 }
             } catch (err) {
@@ -573,7 +552,6 @@
         }
 
         function logout() {
-            localStorage.removeItem('quco_admin_key');
             location.reload();
         }
 
@@ -584,7 +562,7 @@
             event.target.classList.add('active');
             
             if (page === 'keys') loadKeys();
-            if (page === 'control') loadCustomization();
+            if (page === 'settings') loadPanelSettings();
         }
 
         async function loadDashboard() {
@@ -699,56 +677,55 @@
             loadKeys();
         }
 
-        // Panel Customization Functions
-        function loadCustomization() {
-            document.getElementById('panelName').value = panelConfig.name;
-            document.getElementById('panelDescription').value = panelConfig.description;
-            document.getElementById('previewName').textContent = panelConfig.name;
-            document.getElementById('previewDescription').textContent = panelConfig.description;
-            document.getElementById('currentName').textContent = panelConfig.name;
-            document.getElementById('currentDescription').textContent = panelConfig.description;
+        async function loadPanelSettings() {
+            try {
+                const res = await fetch(`${API_URL}/panel/config`, {
+                    headers: { 'Admin-Key': adminKey }
+                });
+                const data = await res.json();
+                
+                if (data.config) {
+                    document.getElementById('panelName').value = data.config.name || 'Quco Key System';
+                    document.getElementById('panelDescription').value = data.config.description || 'Click the buttons below to interact with the key system';
+                }
+            } catch (err) {
+                console.error('Error loading panel settings:', err);
+            }
         }
 
-        function saveCustomization() {
+        async function savePanelSettings() {
             const name = document.getElementById('panelName').value.trim();
             const description = document.getElementById('panelDescription').value.trim();
 
-            if (!name) {
-                alert('Panel name cannot be empty!');
+            if (!name || !description) {
+                alert('Please fill in all fields');
                 return;
             }
 
-            if (!description) {
-                alert('Panel description cannot be empty!');
-                return;
+            try {
+                const res = await fetch(`${API_URL}/panel/config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Admin-Key': adminKey
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        description: description
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccess('✅ Panel settings saved successfully! Changes will reflect in Discord bot.');
+                } else {
+                    alert('Failed to save settings');
+                }
+            } catch (err) {
+                alert('Error saving settings: ' + err.message);
             }
-
-            panelConfig.name = name;
-            panelConfig.description = description;
-
-            localStorage.setItem('quco_panel_config', JSON.stringify(panelConfig));
-
-            document.getElementById('previewName').textContent = name;
-            document.getElementById('previewDescription').textContent = description;
-            document.getElementById('currentName').textContent = name;
-            document.getElementById('currentDescription').textContent = description;
-
-            alert('✅ Panel customization saved!\n\nNote: You need to update your Discord bot to use these settings. Copy these values:\n\nName: ' + name + '\nDescription: ' + description);
         }
-
-        function cancelCustomization() {
-            loadCustomization();
-            alert('❌ Changes cancelled');
-        }
-
-        // Live preview update
-        document.getElementById('panelName')?.addEventListener('input', (e) => {
-            document.getElementById('previewName').textContent = e.target.value || 'Panel Name';
-        });
-
-        document.getElementById('panelDescription')?.addEventListener('input', (e) => {
-            document.getElementById('previewDescription').textContent = e.target.value || 'Panel Description';
-        });
 
         document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
