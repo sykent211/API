@@ -172,8 +172,15 @@ app.get('/admin/keys', requireAdmin, (req, res) => {
 app.post('/admin/generate', requireAdmin, (req, res) => {
     const { prefix } = req.body;
     
-    const randomStr = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Generate random string with letters only (no numbers)
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let randomStr = '';
+    for (let i = 0; i < 16; i++) {
+        randomStr += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
     const newKey = (prefix || "quco") + "_" + randomStr;
+    
+    console.log('Generating key with prefix:', prefix || 'quco');
     
     const keys = loadKeys();
     keys[newKey] = {
