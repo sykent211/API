@@ -3,51 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Panel</title>
+    <title>Quco Control Panel - Christmas Edition 🎄</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #1a1f35 0%, #0f1419 100%);
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             color: white;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Snow Background */
-        .snow-container {
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            user-select: none;
+            cursor: default;
+            animation-name: snowfall;
+            animation-duration: 10s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate3d(100px, 100vh, 0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .christmas-lights {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
+            right: 0;
+            height: 40px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
         }
 
-        .snow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, white, transparent),
-                radial-gradient(2px 2px at 40px 70px, white, transparent),
-                radial-gradient(1px 1px at 50px 50px, white, transparent);
-            background-size: 200px 200px;
-            animation: snow 10s linear infinite;
+        .light {
+            width: 20px;
+            height: 30px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: blink 1.5s infinite;
         }
 
-        @keyframes snow {
-            0% { background-position: 0px 0px, 0px 0px, 0px 0px; }
-            100% { background-position: 500px 1000px, 400px 400px, 300px 300px; }
+        .light:nth-child(1) { background: #ff0000; animation-delay: 0s; }
+        .light:nth-child(2) { background: #00ff00; animation-delay: 0.3s; }
+        .light:nth-child(3) { background: #0000ff; animation-delay: 0.6s; }
+        .light:nth-child(4) { background: #ffff00; animation-delay: 0.9s; }
+        .light:nth-child(5) { background: #ff00ff; animation-delay: 1.2s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+            50% { opacity: 0.3; }
         }
 
-        .snow-layer-2 { animation: snow 15s linear infinite; opacity: 0.5; }
-        .snow-layer-3 { animation: snow 20s linear infinite; opacity: 0.3; }
-
-        /* Login */
         .login-container {
             display: flex;
             justify-content: center;
@@ -58,17 +84,36 @@
         }
 
         .login-box {
-            background: rgba(20, 25, 40, 0.95);
+            background: rgba(30, 32, 38, 0.95);
             backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
             border-radius: 24px;
             padding: 50px 45px;
             width: 480px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.1);
         }
 
-        .login-box h1 { color: white; font-size: 28px; text-align: center; margin-bottom: 12px; }
-        .login-box p { color: rgba(255, 255, 255, 0.6); text-align: center; margin-bottom: 35px; }
+        .login-box h1 {
+            color: white;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .login-box h1::before {
+            content: '🎄 ';
+        }
+
+        .login-box h1::after {
+            content: ' 🎄';
+        }
+
+        .login-box p {
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
         .login-box input {
             width: 100%;
             padding: 14px 16px;
@@ -83,17 +128,14 @@
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
         }
-
-        .login-btn:hover { transform: translateY(-2px); }
 
         .error {
             background: rgba(239, 68, 68, 0.1);
@@ -108,20 +150,24 @@
 
         .error.show { display: block; }
 
-        /* Dashboard */
-        .dashboard { display: none; position: relative; z-index: 10; }
+        .dashboard {
+            display: none;
+            position: relative;
+            z-index: 10;
+        }
+
         .dashboard.active { display: flex; }
 
         .sidebar {
             width: 250px;
-            background: rgba(20, 25, 40, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             height: 100vh;
             position: fixed;
             left: 0;
-            top: 0;
+            top: 40px;
             padding: 20px;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 2px solid rgba(255, 215, 0, 0.2);
         }
 
         .logo {
@@ -131,7 +177,7 @@
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 40px;
-            color: #667eea;
+            color: #ffd700;
         }
 
         .nav-item {
@@ -146,10 +192,22 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .nav-item:hover { background: rgba(102, 126, 234, 0.1); color: white; }
-        .nav-item.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .nav-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: white;
+        }
 
-        .main-content { margin-left: 250px; padding: 30px; min-height: 100vh; }
+        .nav-item.active {
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 40px;
+            padding: 30px;
+            min-height: 100vh;
+        }
 
         .top-bar {
             display: flex;
@@ -157,14 +215,14 @@
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: rgba(20, 25, 40, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.2);
         }
 
         .welcome-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 14px;
@@ -188,49 +246,75 @@
         }
 
         .stat-card {
-            background: rgba(20, 25, 40, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             border-radius: 12px;
             padding: 25px;
         }
 
-        .stat-label { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-bottom: 10px; }
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
         .stat-value {
             font-size: 36px;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #ffd700, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .card {
-            background: rgba(20, 25, 40, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
         }
 
-        .card h2 { font-size: 20px; margin-bottom: 20px; }
-        .card button {
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card input, .card textarea {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 15px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .card textarea {
+            min-height: 100px;
+        }
+
+        .card button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            margin-right: 10px;
         }
 
-        .card button:hover { transform: translateY(-2px); }
+        .btn-secondary {
+            background: rgba(107, 114, 128, 0.5) !important;
+        }
 
         .key-item {
-            background: rgba(15, 20, 35, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 15px;
@@ -239,257 +323,102 @@
             align-items: center;
         }
 
-        .key-info { flex: 1; }
-        .key-line { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .key-text { color: #667eea; font-size: 16px; font-weight: 700; cursor: pointer; }
-        .key-hidden { filter: blur(4px); }
-
-        .copy-key-btn {
-            padding: 4px 12px;
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.5);
-            border-radius: 6px;
-            color: #667eea;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+        .key-info strong {
+            color: #ffd700;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
         }
 
-        .copy-key-btn:hover { background: rgba(102, 126, 234, 0.4); }
+        .key-info small {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
 
-        .key-info small { color: rgba(255, 255, 255, 0.5); font-size: 13px; }
+        .key-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-        .key-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .key-actions button { padding: 8px 16px; width: auto; font-size: 13px; }
+        .key-actions button {
+            padding: 8px 16px;
+            font-size: 13px;
+            margin: 0;
+        }
+
         .delete-btn { background: #dc2626 !important; }
         .reset-btn { background: #f97316 !important; }
         .toggle-btn { background: #10b981 !important; }
-        .blacklist-btn { background: #8b5cf6 !important; }
+        .blacklist-btn { background: #6b21a8 !important; }
 
-        .page { display: none; }
-        .page.active { display: block; }
-
-        /* Modals */
-        .key-modal, .obfuscate-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+        .page {
             display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
         }
 
-        .key-modal.show, .obfuscate-modal.show { display: flex; }
-
-        .modal-content, .obfuscate-content {
-            background: rgba(20, 25, 40, 0.98);
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-content h2, .obfuscate-content h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .obfuscate-content p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .key-display {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
-            color: #fff;
-            margin: 20px 0;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            word-break: break-all;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-        }
-
-        .stat-row span:first-child { color: rgba(255, 255, 255, 0.6); }
-        .stat-row span:last-child { color: #667eea; font-weight: 600; }
-
-        .input-row {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-row label {
+        .page.active {
             display: block;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 600;
         }
 
-        .input-row input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-        }
-
-        .obfuscate-textarea {
-            width: 100%;
-            height: 300px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            resize: vertical;
-            margin-bottom: 20px;
-        }
-
-        .button-group { display: flex; gap: 15px; justify-content: center; }
-        .btn-confirm {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-cancel {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .close-modal, .copy-btn {
+        .customize-preview {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
         }
 
-        .success-message {
-            color: #10b981;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
+        .customize-preview h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
         }
 
-        .success-message.show { display: block; }
+        .customize-preview p {
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body>
-    <div class="snow-container">
-        <div class="snow"></div>
-        <div class="snow snow-layer-2"></div>
-        <div class="snow snow-layer-3"></div>
+    <div class="christmas-lights">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
     </div>
 
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>Quco Login</h1>
-            <p>Enter your API key to continue</p>
+            <h1>Admin Panel</h1>
+            <p>Merry Christmas! 🎅 Enter your API key</p>
             <div class="error" id="errorMsg"></div>
             <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            <button class="login-btn" onclick="login()">Log in</button>
-        </div>
-    </div>
-
-    <div class="key-modal" id="keyModal">
-        <div class="modal-content">
-            <h2>Key Generated Successfully</h2>
-            <div class="key-display" id="generatedKey">XXXXXXXXXXXX</div>
-            <div class="stat-row">
-                <span>Total Keys Generated:</span>
-                <span id="totalGenerated">0</span>
-            </div>
-            <div class="stat-row">
-                <span>Created At:</span>
-                <span id="createdAt">-</span>
-            </div>
-            <button class="close-modal" onclick="closeModal()">Close</button>
-        </div>
-    </div>
-
-    <div class="obfuscate-modal" id="obfuscateModal">
-        <div class="obfuscate-content">
-            <h2>Obfuscate Script</h2>
-            <p>Step 1: Convert your script to loadstring<br>Step 2: Paste it here to get obfuscated version</p>
-            
-            <div class="input-row">
-                <label>Your Script Loadstring</label>
-                <input type="text" id="loadstringInput" placeholder='loadstring(game:HttpGet("https://yourscript.lua"))()'>
-            </div>
-
-            <textarea class="obfuscate-textarea" id="scriptOutput" placeholder="Your obfuscated loadstring will appear here..." readonly></textarea>
-            
-            <div class="button-group">
-                <button class="btn-confirm" onclick="obfuscateScript()">Sure!</button>
-                <button class="btn-cancel" onclick="closeObfuscateModal()">Cancel</button>
-            </div>
-            <button class="copy-btn" id="copyBtn" style="display: none;" onclick="copyObfuscated()">Copy Obfuscated Code</button>
-            <div class="success-message" id="successMsg">Copied to clipboard!</div>
+            <button class="login-btn" onclick="login()">🎁 Log in</button>
         </div>
     </div>
 
     <div class="dashboard" id="dashboard">
         <div class="sidebar">
-            <div class="logo">Quco Panel</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
-            <div class="nav-item" onclick="showPage('keys')">Key Management</div>
-            <div class="nav-item" onclick="showPage('generate')">Generate Keys</div>
-            <div class="nav-item" onclick="showPage('obfuscate')">Obfuscate</div>
+            <div class="logo">🎄 Quco Panel</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="showPage('keys')">🔑 Key Management</div>
+            <div class="nav-item" onclick="showPage('generate')">➕ Generate Keys</div>
+            <div class="nav-item" onclick="showPage('control')">⚙️ Control</div>
         </div>
 
         <div class="main-content">
             <div class="top-bar">
-                <div class="welcome-badge">Welcome back, Admin!</div>
+                <div class="welcome-badge">🎅 Merry Christmas, Admin!</div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
             <div class="page active" id="page-dashboard">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Dashboard</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">🎄 Dashboard</h1>
+                
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">API Status</div>
-                        <div class="stat-value" id="apiStatus">Active</div>
+                        <div class="stat-value" id="apiStatus">✅</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Keys</div>
@@ -507,38 +436,86 @@
             </div>
 
             <div class="page" id="page-generate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Generate Keys</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
                 <div class="card">
-                    <h2>Create New Key</h2>
-                    <button onclick="generateKey()">Generate Key</button>
+                    <h2>🎁 Create New Key</h2>
+                    <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
+                    <button onclick="generateKey()">🎄 Generate Key</button>
                 </div>
             </div>
 
             <div class="page" id="page-keys">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Key Management</h1>
+                <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
                 <div class="card">
-                    <h2>Active Keys (<span id="keyCount">0</span>)</h2>
+                    <h2>🔑 Active Keys (<span id="keyCount">0</span>)</h2>
                     <div id="keysList"></div>
                 </div>
             </div>
 
-            <div class="page" id="page-obfuscate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">Obfuscate</h1>
+            <div class="page" id="page-control">
+                <h1 style="font-size: 32px; margin-bottom: 20px;">⚙️ Control Panel</h1>
                 <div class="card">
-                    <h2>Script Obfuscation</h2>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">
-                        Step 1: Convert your script to loadstring<br>
-                        Step 2: Paste it here to get obfuscated version
-                    </p>
-                    <button onclick="openObfuscateModal()">Obfuscate Script</button>
+                    <h2>🎨 Customize Panel</h2>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">Customize the appearance and text of your Discord panel embed</p>
+                    
+                    <label style="display: block; margin-bottom: 8px; color: rgba(255, 255, 255, 0.8);">Panel Name</label>
+                    <input type="text" id="panelName" placeholder="Enter panel name" value="Quco Key System">
+                    
+                    <label style="display: block; margin-bottom: 8px; color: rgba(255, 255, 255, 0.8);">Panel Description</label>
+                    <textarea id="panelDescription" placeholder="Enter panel description">Click the buttons below to interact with the key system</textarea>
+                    
+                    <div class="customize-preview">
+                        <h3 id="previewName">Quco Key System</h3>
+                        <p id="previewDescription">Click the buttons below to interact with the key system</p>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button onclick="saveCustomization()">💾 Save</button>
+                        <button class="btn-secondary" onclick="cancelCustomization()">❌ Cancel</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>📊 Current Settings</h2>
+                    <div style="background: rgba(15, 15, 15, 0.8); padding: 15px; border-radius: 8px;">
+                        <p style="margin-bottom: 10px;"><strong>Name:</strong> <span id="currentName">Quco Key System</span></p>
+                        <p><strong>Description:</strong> <span id="currentDescription">Click the buttons below to interact with the key system</span></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            setInterval(() => {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.style.animationDuration = Math.random() * 3 + 7 + 's';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                document.body.appendChild(snowflake);
+                setTimeout(() => snowflake.remove(), 10000);
+            }, 300);
+        }
+        createSnowflakes();
+
         let adminKey = localStorage.getItem('quco_admin_key') || '';
         const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
+
+        // Panel customization storage
+        let panelConfig = JSON.parse(localStorage.getItem('quco_panel_config')) || {
+            name: 'Quco Key System',
+            description: 'Click the buttons below to interact with the key system'
+        };
+
+        // Load saved customization on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomization();
+        });
 
         if (adminKey) verifyAndLogin();
 
@@ -567,6 +544,7 @@
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     loadDashboard();
+                    loadCustomization();
                 } else {
                     showError('Invalid API key');
                 }
@@ -584,6 +562,7 @@
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     loadDashboard();
+                    loadCustomization();
                 } else {
                     localStorage.removeItem('quco_admin_key');
                     adminKey = '';
@@ -601,18 +580,11 @@
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            const pageElement = document.getElementById('page-' + page);
-            if (pageElement) pageElement.classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(page.toLowerCase())) {
-                    item.classList.add('active');
-                }
-            });
+            document.getElementById('page-' + page).classList.add('active');
+            event.target.classList.add('active');
             
             if (page === 'keys') loadKeys();
+            if (page === 'control') loadCustomization();
         }
 
         async function loadDashboard() {
@@ -623,85 +595,15 @@
         async function checkApiStatus() {
             try {
                 await fetch(`${API_URL}/api`);
-                document.getElementById('apiStatus').textContent = 'Active';
+                document.getElementById('apiStatus').textContent = '✅';
             } catch {
-                document.getElementById('apiStatus').textContent = 'Offline';
+                document.getElementById('apiStatus').textContent = '❌';
             }
-        }
-
-        function closeModal() {
-            document.getElementById('keyModal').classList.remove('show');
-        }
-
-        function openObfuscateModal() {
-            document.getElementById('obfuscateModal').classList.add('show');
-            document.getElementById('loadstringInput').value = '';
-            document.getElementById('scriptOutput').value = '';
-            document.getElementById('copyBtn').style.display = 'none';
-        }
-
-        function closeObfuscateModal() {
-            document.getElementById('obfuscateModal').classList.remove('show');
-        }
-
-        function obfuscateScript() {
-            const loadstringUrl = document.getElementById('loadstringInput').value.trim();
-            
-            if (!loadstringUrl) {
-                alert('Please enter a loadstring URL!');
-                return;
-            }
-
-            // Show loading
-            document.getElementById('scriptOutput').value = 'Generating obfuscated loader...';
-
-            // Call backend to create obfuscated loader
-            fetch(`${API_URL}/admin/obfuscate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Admin-Key': adminKey
-                },
-                body: JSON.stringify({ scriptUrl: loadstringUrl })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('scriptOutput').value = data.obfuscatedUrl;
-                    document.getElementById('copyBtn').style.display = 'inline-block';
-                } else {
-                    alert('Failed to obfuscate: ' + data.message);
-                    document.getElementById('scriptOutput').value = '';
-                }
-            })
-            .catch(err => {
-                alert('Error: ' + err.message);
-                document.getElementById('scriptOutput').value = '';
-            });
-        }
-
-        function copyObfuscated() {
-            const textarea = document.getElementById('scriptOutput');
-            textarea.select();
-            document.execCommand('copy');
-            
-            const msg = document.getElementById('successMsg');
-            msg.classList.add('show');
-            setTimeout(() => msg.classList.remove('show'), 2000);
-        }
-
-        function copyKey(key) {
-            const textarea = document.createElement('textarea');
-            textarea.value = key;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            alert('Key copied to clipboard!');
         }
 
         async function generateKey() {
+            const prefix = document.getElementById('prefix').value || 'quco';
+
             try {
                 const res = await fetch(`${API_URL}/admin/generate`, {
                     method: 'POST',
@@ -709,43 +611,16 @@
                         'Content-Type': 'application/json',
                         'Admin-Key': adminKey
                     },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({ prefix })
                 });
-                
-                if (!res.ok) throw new Error('Failed to generate key');
-                
                 const data = await res.json();
-                
                 if (data.success) {
-                    const keyElement = document.getElementById('generatedKey');
-                    const totalElement = document.getElementById('totalGenerated');
-                    const timeElement = document.getElementById('createdAt');
-                    
-                    if (keyElement) keyElement.textContent = data.key;
-                    if (totalElement) totalElement.textContent = data.totalGenerated;
-                    if (timeElement) timeElement.textContent = new Date().toLocaleString();
-                    
-                    const modal = document.getElementById('keyModal');
-                    if (modal) modal.classList.add('show');
-                    
+                    alert(`🎁 Key Generated!\n\n${data.key}\n\nCopy this key now!`);
+                    document.getElementById('prefix').value = '';
                     loadKeys();
-                } else {
-                    alert('Failed to generate key: ' + (data.message || 'Unknown error'));
                 }
             } catch (err) {
-                console.error('Generation error:', err);
-                alert('Failed to generate key: ' + err.message);
-            }
-        }
-
-        function toggleKeyVisibility(element, key) {
-            if (element.classList.contains('key-hidden')) {
-                element.classList.remove('key-hidden');
-                element.textContent = `License Key: ${key}`;
-            } else {
-                element.classList.add('key-hidden');
-                const maskedKey = `${key.substring(0, 2)}${'*'.repeat(8)}${key.substring(10)}`;
-                element.textContent = `License Key: ${maskedKey}`;
+                alert('Failed to generate key');
             }
         }
 
@@ -769,16 +644,12 @@
                 data.keys.forEach(k => {
                     const div = document.createElement('div');
                     div.className = 'key-item';
+                    const status = k.blacklisted ? '🚫 Blacklisted' : (k.active ? '✅ Active' : '❌ Disabled');
                     const hwidDisplay = k.hwid ? k.hwid.substring(0, 12) + '...' : '-';
-                    const maskedKey = `${k.key.substring(0, 2)}${'*'.repeat(8)}${k.key.substring(10)}`;
-                    const statusText = k.blacklisted ? 'Blacklisted' : '';
                     div.innerHTML = `
                         <div class="key-info">
-                            <div class="key-line">
-                                <span class="key-text key-hidden" onclick="toggleKeyVisibility(this, '${k.key}')">License Key: ${maskedKey}</span>
-                                <button class="copy-key-btn" onclick="copyKey('${k.key}')">Copy</button>
-                            </div>
-                            <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} ${statusText}</small>
+                            <strong>${k.key}</strong>
+                            <small>UserID: ${k.userId || '-'} | HWID: ${hwidDisplay} | Resets: ${k.hwidResets || 0} | Executions: ${k.executions || 0} | ${status}</small>
                         </div>
                         <div class="key-actions">
                             <button class="toggle-btn" onclick="toggleKey('${k.key}')">${k.active ? 'Disable' : 'Enable'}</button>
@@ -827,6 +698,57 @@
             });
             loadKeys();
         }
+
+        // Panel Customization Functions
+        function loadCustomization() {
+            document.getElementById('panelName').value = panelConfig.name;
+            document.getElementById('panelDescription').value = panelConfig.description;
+            document.getElementById('previewName').textContent = panelConfig.name;
+            document.getElementById('previewDescription').textContent = panelConfig.description;
+            document.getElementById('currentName').textContent = panelConfig.name;
+            document.getElementById('currentDescription').textContent = panelConfig.description;
+        }
+
+        function saveCustomization() {
+            const name = document.getElementById('panelName').value.trim();
+            const description = document.getElementById('panelDescription').value.trim();
+
+            if (!name) {
+                alert('Panel name cannot be empty!');
+                return;
+            }
+
+            if (!description) {
+                alert('Panel description cannot be empty!');
+                return;
+            }
+
+            panelConfig.name = name;
+            panelConfig.description = description;
+
+            localStorage.setItem('quco_panel_config', JSON.stringify(panelConfig));
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewDescription').textContent = description;
+            document.getElementById('currentName').textContent = name;
+            document.getElementById('currentDescription').textContent = description;
+
+            alert('✅ Panel customization saved!\n\nNote: You need to update your Discord bot to use these settings. Copy these values:\n\nName: ' + name + '\nDescription: ' + description);
+        }
+
+        function cancelCustomization() {
+            loadCustomization();
+            alert('❌ Changes cancelled');
+        }
+
+        // Live preview update
+        document.getElementById('panelName')?.addEventListener('input', (e) => {
+            document.getElementById('previewName').textContent = e.target.value || 'Panel Name';
+        });
+
+        document.getElementById('panelDescription')?.addEventListener('input', (e) => {
+            document.getElementById('previewDescription').textContent = e.target.value || 'Panel Description';
+        });
 
         document.getElementById('apiKey')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
