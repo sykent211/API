@@ -15,11 +15,11 @@ app.use((req, res, next) => {
     next();
 });
 
-const ADMIN_KEY = "admin_quco_2024";
+const ADMIN_KEY = "SUIWEY";
 const KEYS_FILE = path.join(__dirname, 'keys.json');
-const LOADERS_FILE = path.join(__dirname, 'loaders.json');
+const PANEL_CONFIG_FILE = path.join(__dirname, 'panel-config.json');
 
-// Initialize files
+// Auto-create keys.json on first run
 if (!fs.existsSync(KEYS_FILE)) {
     fs.writeFileSync(KEYS_FILE, JSON.stringify({
         "scriptkey": { 
@@ -32,17 +32,20 @@ if (!fs.existsSync(KEYS_FILE)) {
             createdAt: new Date().toISOString() 
         }
     }, null, 2));
-    console.log('keys.json created automatically');
 }
 
-if (!fs.existsSync(LOADERS_FILE)) {
-    fs.writeFileSync(LOADERS_FILE, JSON.stringify({}, null, 2));
-    console.log('loaders.json created automatically');
+// Auto-create panel-config.json on first run
+if (!fs.existsSync(PANEL_CONFIG_FILE)) {
+    fs.writeFileSync(PANEL_CONFIG_FILE, JSON.stringify({
+        name: 'Quco Key System',
+        description: 'Click the buttons below to interact with the key system'
+    }, null, 2));
 }
 
 function loadKeys() {
     try {
-        return JSON.parse(fs.readFileSync(KEYS_FILE, 'utf8'));
+        const data = fs.readFileSync(KEYS_FILE, 'utf8');
+        return JSON.parse(data);
     } catch (err) {
         return {};
     }
@@ -57,17 +60,21 @@ function saveKeys(keys) {
     }
 }
 
-function loadLoaders() {
+function loadPanelConfig() {
     try {
-        return JSON.parse(fs.readFileSync(LOADERS_FILE, 'utf8'));
+        const data = fs.readFileSync(PANEL_CONFIG_FILE, 'utf8');
+        return JSON.parse(data);
     } catch (err) {
-        return {};
+        return {
+            name: 'Quco Key System',
+            description: 'Click the buttons below to interact with the key system'
+        };
     }
 }
 
-function saveLoaders(loaders) {
+function savePanelConfig(config) {
     try {
-        fs.writeFileSync(LOADERS_FILE, JSON.stringify(loaders, null, 2));
+        fs.writeFileSync(PANEL_CONFIG_FILE, JSON.stringify(config, null, 2));
         return true;
     } catch (err) {
         return false;
@@ -81,6 +88,66 @@ function requireAdmin(req, res, next) {
     }
     next();
 }
+
+// ==================== PANEL CONFIGURATION ENDPOINTS ====================
+
+// GET panel configuration (public - for Discord bot)
+app.get('/panel/config', (req, res) => {
+    try {
+        const config = loadPanelConfig();
+        res.json({
+            success: true,
+            config: config
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
+    }
+});
+
+// POST update panel configuration (requires admin)
+app.post('/panel/config', requireAdmin, (req, res) => {
+    try {
+        const { name, description } = req.body;
+        
+        if (!name || !description) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Name and description are required' 
+            });
+        }
+        
+        const config = {
+            name: name.trim(),
+            description: description.trim()
+        };
+        
+        if (savePanelConfig(config)) {
+            console.log('✅ Panel config updated:', config);
+            res.json({
+                success: true,
+                message: 'Panel configuration updated successfully',
+                config: config
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Failed to save panel configuration'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
+    }
+});
+
+// ==================== ADMIN ENDPOINTS ====================
 
 // Admin login
 app.post('/admin/login', (req, res) => {
@@ -101,20 +168,14 @@ app.get('/admin/keys', requireAdmin, (req, res) => {
     res.json({ success: true, keys: keyList });
 });
 
-// Generate new key (12 random characters)
+// Generate new key (NO EXPIRATION)
 app.post('/admin/generate', requireAdmin, (req, res) => {
-    // Generate 12 random alphanumeric characters
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let newKey = '';
-    for (let i = 0; i < 12; i++) {
-        newKey += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    const { prefix } = req.body;
+    
+    const randomStr = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const newKey = (prefix || "quco") + "_" + randomStr;
     
     const keys = loadKeys();
-    
-    // Count total keys generated
-    const totalGenerated = Object.keys(keys).length + 1;
-    
     keys[newKey] = {
         active: true,
         blacklisted: false,
@@ -126,13 +187,8 @@ app.post('/admin/generate', requireAdmin, (req, res) => {
     };
     
     if (saveKeys(keys)) {
-        console.log(`New key generated: ${newKey} (Total: ${totalGenerated})`);
-        res.json({ 
-            success: true, 
-            key: newKey, 
-            totalGenerated: totalGenerated,
-            message: "Key generated successfully" 
-        });
+        console.log(`New key generated: ${newKey}`);
+        res.json({ success: true, key: newKey, message: "Key generated successfully" });
     } else {
         res.status(500).json({ success: false, message: "Failed to save key" });
     }
@@ -164,7 +220,7 @@ app.post('/admin/keys/:key/toggle', requireAdmin, (req, res) => {
     if (keys[keyToToggle]) {
         keys[keyToToggle].active = !keys[keyToToggle].active;
         if (saveKeys(keys)) {
-            console.log(`Key toggled: ${keyToToggle} - Active: ${keys[keyToToggle].active}`);
+            console.log(`🔄 Key toggled: ${keyToToggle} - Active: ${keys[keyToToggle].active}`);
             res.json({ success: true, active: keys[keyToToggle].active });
         } else {
             res.status(500).json({ success: false, message: "Failed to update key" });
@@ -211,6 +267,8 @@ app.post('/admin/keys/:key/reset-hwid', requireAdmin, (req, res) => {
     }
 });
 
+// ==================== VALIDATION ENDPOINTS ====================
+
 // Validate key (NO EXPIRATION CHECK)
 app.get('/validate', (req, res) => {
     const { key, hwid, username, userId } = req.query;
@@ -218,14 +276,14 @@ app.get('/validate', (req, res) => {
     console.log(`Validation - Key: ${key}, User: ${username}, UserID: ${userId}, HWID: ${hwid}`);
     
     if (!key || key === "" || key === "null") {
-        return res.json({ success: false, message: "No key provided" });
+        return res.json({ success: false, message: "NOT Whitelisted - Invalid License" });
     }
     
     const keys = loadKeys();
     const keyData = keys[key];
     
     if (!keyData) {
-        console.log(`Invalid key: ${key}`);
+        console.log(`Invalid key: ${key}`)
         return res.json({ success: false, message: "Invalid key" });
     }
 
@@ -259,7 +317,7 @@ app.get('/validate', (req, res) => {
     keyData.executions = (keyData.executions || 0) + 1;
     
     saveKeys(keys);
-    console.log(`Key validated: ${key} for ${username} (Execution #${keyData.executions})`);
+    console.log(`✅ Key validated: ${key} for ${username} (Execution #${keyData.executions})`);
     
     res.json({ 
         success: true, 
@@ -275,76 +333,18 @@ app.post('/validate', (req, res) => {
     return app._router.handle(req, res);
 });
 
+// ==================== API STATUS ====================
+ 
 app.get('/api', (req, res) => {
     res.json({ 
-        status: "Quco Key System Online",
+        status: "✅ Quco Key System Online",
         timestamp: new Date().toISOString()
     });
 });
 
-// Obfuscate and store script
-app.post('/admin/obfuscate', requireAdmin, (req, res) => {
-    const { scriptUrl } = req.body;
-    
-    if (!scriptUrl) {
-        return res.status(400).json({ success: false, message: "No script URL provided" });
-    }
-
-    // Generate random loader ID
-    const chars = 'abcdef0123456789';
-    let loaderID = '';
-    for (let i = 0; i < 32; i++) {
-        loaderID += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    // Store the mapping
-    const loaders = loadLoaders();
-    loaders[loaderID] = {
-        originalUrl: scriptUrl,
-        createdAt: new Date().toISOString()
-    };
-    
-    if (saveLoaders(loaders)) {
-        console.log(`Obfuscated script created: ${loaderID}`);
-        res.json({ 
-            success: true, 
-            loaderID: loaderID,
-            obfuscatedUrl: `loadstring(game:HttpGet("https://wowwww.net/files/v3/loaders/${loaderID}.lua"))()`
-        });
-    } else {
-        res.status(500).json({ success: false, message: "Failed to save loader" });
-    }
-});
-
-// Serve obfuscated loader
-app.get('/files/v3/loaders/:loaderID', (req, res) => {
-    // Remove .lua extension if present
-    let loaderID = req.params.loaderID.replace('.lua', '');
-    
-    const loaders = loadLoaders();
-    
-    if (!loaders[loaderID]) {
-        return res.status(404).send('-- Loader not found');
-    }
-
-    const originalUrl = loaders[loaderID].originalUrl;
-    
-    // Generate obfuscated loader that fetches the original script
-    const obfuscatedScript = `
--- Obfuscated by Quco
-local _0x1=string.char;local _0x2=string.byte;local _0x3=table.concat;
-local _0x4=string.sub;local _0x5=loadstring;local _0x6=game;
-local _0x7=_0x6:GetService("HttpService");local _0x8="${originalUrl}";
-local _0x9=_0x6:HttpGet(_0x8,true);_0x5(_0x9)();
-    `.trim();
-
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(obfuscatedScript);
-});
-
 app.listen(PORT, () => {
-    console.log(`Quco Key System running on port ${PORT}`);
-    console.log(`Admin Key: ${ADMIN_KEY}`);
-    console.log(`Keys file: ${KEYS_FILE}`);
-    console.log(`Loaders file: ${LOADERS_FILE}`);
+    console.log(`🚀 Quco Key System running on port ${PORT}`);
+    console.log(`🔑 Admin Key: ${ADMIN_KEY}`);
+    console.log(`📁 Keys file: ${KEYS_FILE}`);
+    console.log(`⚙️ Panel config file: ${PANEL_CONFIG_FILE}`);
 });
