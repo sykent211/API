@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quco Control Panel - Christmas Edition 🎄</title>
+    <title>Quco Control Panel</title>
     <style>
         * {
             margin: 0;
@@ -13,140 +13,73 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            background: #000000;
             color: white;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* Falling Snow */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            z-index: 9999;
-            user-select: none;
-            cursor: default;
-            animation-name: snowfall;
-            animation-duration: 10s;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            color: white;
-            font-size: 1.5em;
-        }
-
-        @keyframes snowfall {
-            0% {
-                transform: translate3d(0, 0, 0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate3d(100px, 100vh, 0) rotate(360deg);
-                opacity: 0.3;
-            }
-        }
-
-        /* Christmas Decorations */
-        .christmas-lights {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .light {
-            width: 20px;
-            height: 30px;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: blink 1.5s infinite;
-        }
-
-        .light:nth-child(1) { background: #ff0000; animation-delay: 0s; }
-        .light:nth-child(2) { background: #00ff00; animation-delay: 0.3s; }
-        .light:nth-child(3) { background: #0000ff; animation-delay: 0.6s; }
-        .light:nth-child(4) { background: #ffff00; animation-delay: 0.9s; }
-        .light:nth-child(5) { background: #ff00ff; animation-delay: 1.2s; }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Login Page */
         .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            position: relative;
-            z-index: 10;
         }
 
         .login-box {
-            background: rgba(30, 32, 38, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 24px;
-            padding: 50px 45px;
-            width: 480px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.1);
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 40px;
+            width: 400px;
         }
 
         .login-box h1 {
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .login-box h1::before {
-            content: '🎄 ';
-        }
-
-        .login-box h1::after {
-            content: ' 🎄';
+            margin-bottom: 10px;
         }
 
         .login-box p {
-            color: rgba(255, 255, 255, 0.6);
+            color: #888;
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .login-box input {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 8px;
             color: white;
-            font-size: 15px;
-            margin-bottom: 25px;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
         .login-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
-            color: white;
+            padding: 12px;
+            background: white;
+            color: black;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #ddd;
         }
 
         .error {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            color: #ef4444;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
             text-align: center;
             display: none;
         }
@@ -156,72 +89,61 @@
         .success {
             background: rgba(34, 197, 94, 0.1);
             border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #86efac;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            color: #22c55e;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
             text-align: center;
             display: none;
         }
 
         .success.show { display: block; }
 
-        /* Dashboard */
         .dashboard {
             display: none;
-            position: relative;
-            z-index: 10;
         }
 
         .dashboard.active { display: flex; }
 
         .sidebar {
             width: 250px;
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
+            background: #111;
             height: 100vh;
             position: fixed;
             left: 0;
-            top: 40px;
+            top: 0;
             padding: 20px;
-            border-right: 2px solid rgba(255, 215, 0, 0.2);
+            border-right: 1px solid #333;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 40px;
-            color: #ffd700;
+            margin-bottom: 30px;
+            color: white;
         }
 
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
             padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 10px;
+            margin-bottom: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
-            color: rgba(255, 255, 255, 0.7);
+            color: #888;
         }
 
         .nav-item:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: #222;
             color: white;
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
-            color: white;
+            background: white;
+            color: black;
         }
 
         .main-content {
             margin-left: 250px;
-            margin-top: 40px;
             padding: 30px;
             min-height: 100vh;
         }
@@ -232,27 +154,32 @@
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 2px solid rgba(255, 215, 0, 0.2);
+            background: #111;
+            border-radius: 8px;
+            border: 1px solid #333;
         }
 
         .welcome-badge {
-            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
-            padding: 10px 20px;
-            border-radius: 8px;
+            background: white;
+            color: black;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-size: 14px;
+            font-weight: 600;
         }
 
         .logout-btn {
-            padding: 10px 20px;
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 8px;
+            padding: 8px 16px;
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
         }
 
         .stats-grid {
@@ -263,46 +190,43 @@
         }
 
         .stat-card {
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            border-radius: 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
             padding: 25px;
         }
 
         .stat-label {
-            color: rgba(255, 255, 255, 0.6);
+            color: #888;
             font-size: 14px;
             margin-bottom: 10px;
         }
 
         .stat-value {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white;
         }
 
         .card {
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            border-radius: 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
             padding: 25px;
             margin-bottom: 20px;
         }
 
         .card h2 {
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 20px;
+            color: white;
         }
 
         .card input, .card textarea {
             width: 100%;
             padding: 12px;
-            background: rgba(15, 15, 15, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #222;
+            border: 1px solid #444;
             border-radius: 8px;
             color: white;
             margin-bottom: 15px;
@@ -317,35 +241,40 @@
         .card button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);
-            color: white;
+            background: white;
+            color: black;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
         }
 
+        .card button:hover {
+            background: #ddd;
+        }
+
         .key-item {
-            background: rgba(15, 15, 15, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #222;
+            border: 1px solid #444;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .key-info strong {
-            color: #ffd700;
-            font-size: 16px;
+            color: white;
+            font-size: 15px;
             display: block;
             margin-bottom: 8px;
         }
 
         .key-info small {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 13px;
+            color: #888;
+            font-size: 12px;
         }
 
         .key-actions {
@@ -355,15 +284,16 @@
         }
 
         .key-actions button {
-            padding: 8px 16px;
+            padding: 6px 12px;
             width: auto;
-            font-size: 13px;
+            font-size: 12px;
+            border-radius: 6px;
         }
 
-        .delete-btn { background: #dc2626 !important; }
-        .reset-btn { background: #f97316 !important; }
-        .toggle-btn { background: #10b981 !important; }
-        .blacklist-btn { background: #6b21a8 !important; }
+        .delete-btn { background: #ef4444 !important; color: white !important; }
+        .reset-btn { background: #f97316 !important; color: white !important; }
+        .toggle-btn { background: #22c55e !important; color: white !important; }
+        .blacklist-btn { background: #8b5cf6 !important; color: white !important; }
 
         .page {
             display: none;
@@ -372,53 +302,48 @@
         .page.active {
             display: block;
         }
+
+        label {
+            color: #888;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <!-- Christmas Lights -->
-    <div class="christmas-lights">
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-    </div>
-
-    <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
             <h1>Admin Panel</h1>
-            <p>Merry Christmas! 🎅 Enter your API key</p>
+            <p>Enter your admin API key</p>
             <div class="error" id="errorMsg"></div>
             <input type="password" id="apiKey" placeholder="Enter your admin API key">
-            <button class="login-btn" onclick="login()">🎁 Log in</button>
+            <button class="login-btn" onclick="login()">Log in</button>
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
         <div class="sidebar">
-            <div class="logo">🎄 Quco Panel</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
-            <div class="nav-item" onclick="showPage('keys')">🔑 Key Management</div>
-            <div class="nav-item" onclick="showPage('generate')">➕ Generate Keys</div>
-            <div class="nav-item" onclick="showPage('settings')">⚙️ Panel Settings</div>
+            <div class="logo">Quco Panel</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="showPage('keys')">Key Management</div>
+            <div class="nav-item" onclick="showPage('generate')">Generate Keys</div>
+            <div class="nav-item" onclick="showPage('settings')">Panel Settings</div>
         </div>
 
         <div class="main-content">
             <div class="top-bar">
-                <div class="welcome-badge">🎅 Merry Christmas, Admin!</div>
+                <div class="welcome-badge">Welcome Admin</div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
-            <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">🎄 Dashboard</h1>
+                <h1 style="font-size: 28px; margin-bottom: 20px;">Dashboard</h1>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">API Status</div>
-                        <div class="stat-value" id="apiStatus">✅</div>
+                        <div class="stat-value" id="apiStatus">Online</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Keys</div>
@@ -435,65 +360,43 @@
                 </div>
             </div>
 
-            <!-- Generate Page -->
             <div class="page" id="page-generate">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">➕ Generate Keys</h1>
+                <h1 style="font-size: 28px; margin-bottom: 20px;">Generate Keys</h1>
                 <div class="card">
-                    <h2>🎁 Create New Key</h2>
+                    <h2>Create New Key</h2>
                     <input type="text" id="prefix" placeholder="Key Prefix (default: quco)">
-                    <button onclick="generateKey()">🎄 Generate Key</button>
+                    <button onclick="generateKey()">Generate Key</button>
                 </div>
             </div>
 
-            <!-- Keys Page -->
             <div class="page" id="page-keys">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">🔑 Key Management</h1>
+                <h1 style="font-size: 28px; margin-bottom: 20px;">Key Management</h1>
                 <div class="card">
-                    <h2>🔑 Active Keys (<span id="keyCount">0</span>)</h2>
+                    <h2>Active Keys (<span id="keyCount">0</span>)</h2>
                     <div id="keysList"></div>
                 </div>
             </div>
 
-            <!-- Settings Page -->
             <div class="page" id="page-settings">
-                <h1 style="font-size: 32px; margin-bottom: 20px;">⚙️ Panel Settings</h1>
+                <h1 style="font-size: 28px; margin-bottom: 20px;">Panel Settings</h1>
                 <div class="card">
-                    <h2>🎮 Discord Bot Panel Configuration</h2>
+                    <h2>Discord Bot Panel Configuration</h2>
                     <div class="success" id="settingsSuccess"></div>
-                    <label style="color: rgba(255, 255, 255, 0.7); display: block; margin-bottom: 8px; font-size: 14px;">Panel Name</label>
+                    <label>Panel Name</label>
                     <input type="text" id="panelName" placeholder="Quco Key System">
                     
-                    <label style="color: rgba(255, 255, 255, 0.7); display: block; margin-bottom: 8px; font-size: 14px;">Panel Description</label>
+                    <label>Panel Description</label>
                     <textarea id="panelDescription" placeholder="Click the buttons below to interact with the key system"></textarea>
                     
-                    <button onclick="savePanelSettings()">💾 Save Settings</button>
+                    <button onclick="savePanelSettings()">Save Settings</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Create falling snowflakes
-        function createSnowflakes() {
-            const snowflakes = ['❄', '❅', '❆'];
-            setInterval(() => {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
-                snowflake.style.left = Math.random() * window.innerWidth + 'px';
-                snowflake.style.animationDuration = Math.random() * 3 + 7 + 's';
-                snowflake.style.opacity = Math.random();
-                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-                document.body.appendChild(snowflake);
-                setTimeout(() => snowflake.remove(), 10000);
-            }, 300);
-        }
-        createSnowflakes();
-
         let adminKey = '';
         const API_URL = 'https://quco-panel-production-de6a.up.railway.app';
-
-        if (adminKey) verifyAndLogin();
 
         function showError(msg) {
             const el = document.getElementById('errorMsg');
@@ -534,23 +437,6 @@
             }
         }
 
-        async function verifyAndLogin() {
-            try {
-                const res = await fetch(`${API_URL}/admin/keys`, {
-                    headers: { 'Admin-Key': adminKey }
-                });
-                if (res.ok) {
-                    document.getElementById('loginContainer').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    loadDashboard();
-                } else {
-                    adminKey = '';
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
         function logout() {
             location.reload();
         }
@@ -573,9 +459,9 @@
         async function checkApiStatus() {
             try {
                 await fetch(`${API_URL}/api`);
-                document.getElementById('apiStatus').textContent = '✅';
+                document.getElementById('apiStatus').textContent = 'Online';
             } catch {
-                document.getElementById('apiStatus').textContent = '❌';
+                document.getElementById('apiStatus').textContent = 'Offline';
             }
         }
 
@@ -593,7 +479,7 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert(`🎁 Key Generated!\n\n${data.key}\n\nCopy this key now!`);
+                    alert(`Key Generated!\n\n${data.key}\n\nCopy this key now!`);
                     document.getElementById('prefix').value = '';
                     loadKeys();
                 }
@@ -622,7 +508,7 @@
                 data.keys.forEach(k => {
                     const div = document.createElement('div');
                     div.className = 'key-item';
-                    const status = k.blacklisted ? '🚫 Blacklisted' : (k.active ? '✅ Active' : '❌ Disabled');
+                    const status = k.blacklisted ? 'Blacklisted' : (k.active ? 'Active' : 'Disabled');
                     const hwidDisplay = k.hwid ? k.hwid.substring(0, 12) + '...' : '-';
                     div.innerHTML = `
                         <div class="key-info">
@@ -718,7 +604,7 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    showSuccess('✅ Panel settings saved successfully! Changes will reflect in Discord bot.');
+                    showSuccess('Panel settings saved successfully! Changes will reflect in Discord bot.');
                 } else {
                     alert('Failed to save settings');
                 }
